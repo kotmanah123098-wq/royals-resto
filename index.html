@@ -1,0 +1,2265 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Royals Resto — Королівство смаку</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Cinzel:wght@400;600&display=swap" rel="stylesheet"/>
+<style>
+/* ═══════════════════════════════════════════
+   CSS VARIABLES
+═══════════════════════════════════════════ */
+:root{
+  --burg:#4A0E0E; --burg2:#1a0404; --gold:#D4AF37; --gold2:#f0d070;
+  --fire:#C44A1F; --cream:#f5ead8; --creamy:#c9b89a; --dark:#080202;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--dark);color:var(--cream);font-family:'Cormorant Garamond',serif;overflow-x:hidden}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:#1a0404}
+::-webkit-scrollbar-thumb{background:var(--gold);border-radius:3px}
+
+/* ═══════════════════════════════════════════
+   SHARED BUTTONS
+═══════════════════════════════════════════ */
+.bg{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  background:linear-gradient(135deg,var(--gold),#b8922e);color:#1a0404;
+  font-family:'Cinzel',serif;font-size:.68rem;font-weight:600;letter-spacing:.15em;
+  text-transform:uppercase;padding:13px 30px;border:none;cursor:pointer;
+  transition:all .3s;text-decoration:none;position:relative;overflow:hidden}
+.bg::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--gold2),var(--gold));opacity:0;transition:opacity .3s}
+.bg:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(212,175,55,.35)}
+.bg:hover::after{opacity:1}
+.bg span{position:relative;z-index:1}
+
+.bo{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  border:1px solid var(--gold);color:var(--gold);
+  font-family:'Cinzel',serif;font-size:.68rem;font-weight:600;letter-spacing:.15em;
+  text-transform:uppercase;padding:12px 30px;background:transparent;cursor:pointer;transition:all .3s;text-decoration:none}
+.bo:hover{background:rgba(212,175,55,.1);transform:translateY(-2px)}
+
+/* ═══════════════════════════════════════════
+   SHARED FORM ELEMENTS
+═══════════════════════════════════════════ */
+.fi{background:rgba(255,255,255,.03);border:1px solid rgba(212,175,55,.2);
+  color:var(--cream);font-family:'Cormorant Garamond',serif;font-size:1rem;
+  padding:11px 14px;outline:none;transition:all .3s;width:100%}
+.fi:focus{border-color:var(--gold);background:rgba(212,175,55,.05);box-shadow:0 0 0 3px rgba(212,175,55,.08)}
+.fi::placeholder{color:#4a3520}
+select.fi option{background:#1a0404;color:var(--cream)}
+.fl{font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:5px}
+
+/* ═══════════════════════════════════════════
+   SECTION TYPOGRAPHY
+═══════════════════════════════════════════ */
+.st{font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3.4rem);color:var(--gold);letter-spacing:.02em;line-height:1.15}
+.ss{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--creamy);font-style:italic;letter-spacing:.05em}
+.gl{height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.orn{font-family:'Cormorant Garamond',serif;color:var(--gold);opacity:.55;letter-spacing:.4em;font-size:.9rem}
+
+/* ═══════════════════════════════════════════
+   NAVBAR
+═══════════════════════════════════════════ */
+#nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:16px 0;transition:all .4s}
+#nav.scrolled{background:rgba(8,2,2,.97);backdrop-filter:blur(14px);border-bottom:1px solid rgba(212,175,55,.12);padding:10px 0;box-shadow:0 4px 40px rgba(0,0,0,.7)}
+.nl{font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;
+  color:rgba(245,234,216,.7);text-decoration:none;background:none;border:none;cursor:pointer;
+  position:relative;padding-bottom:2px;transition:color .3s}
+.nl::after{content:'';position:absolute;bottom:-1px;left:0;width:0;height:1px;background:var(--gold);transition:width .3s}
+.nl:hover,.nl.on{color:var(--gold)}.nl:hover::after,.nl.on::after{width:100%}
+
+/* Admin badge in nav */
+#nav-admin-btn{background:rgba(212,175,55,.12);border:1px solid rgba(212,175,55,.3);
+  color:var(--gold);font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.12em;
+  text-transform:uppercase;padding:6px 14px;cursor:pointer;transition:all .3s;display:none}
+#nav-admin-btn:hover{background:rgba(212,175,55,.22)}
+
+/* User avatar */
+.nav-av{width:32px;height:32px;border-radius:50%;border:1.5px solid var(--gold);
+  background:linear-gradient(135deg,var(--burg),#6b1515);display:flex;align-items:center;
+  justify-content:center;font-family:'Playfair Display',serif;font-size:.8rem;color:var(--gold);cursor:pointer;overflow:hidden}
+.udd{position:absolute;right:0;top:calc(100% + 8px);background:linear-gradient(145deg,#1e0505,#2d0808);
+  border:1px solid rgba(212,175,55,.2);min-width:190px;z-index:600}
+.udd button,.udd a{display:block;width:100%;padding:10px 16px;text-align:left;
+  font-family:'Cormorant Garamond',serif;font-size:.92rem;color:var(--creamy);
+  background:none;border:none;cursor:pointer;text-decoration:none;transition:all .25s}
+.udd button:hover,.udd a:hover{color:var(--gold);background:rgba(212,175,55,.06);padding-left:22px}
+
+/* ═══════════════════════════════════════════
+   HERO
+═══════════════════════════════════════════ */
+.hero-bg{position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=1920&q=85') center/cover no-repeat}
+.hero-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(8,2,2,.35) 0%,rgba(74,14,14,.45) 35%,rgba(8,2,2,.85) 75%,rgba(8,2,2,1) 100%)}
+.ht{font-family:'Playfair Display',serif;font-size:clamp(3.8rem,11vw,9rem);font-weight:900;line-height:.95;
+  background:linear-gradient(135deg,var(--gold2) 0%,var(--gold) 40%,#e8a030 75%,var(--gold) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  filter:drop-shadow(0 0 40px rgba(212,175,55,.3));letter-spacing:-.01em}
+
+/* ═══════════════════════════════════════════
+   REVEAL ANIMATIONS
+═══════════════════════════════════════════ */
+.rv{opacity:0;transform:translateY(32px);transition:opacity .8s ease,transform .8s ease}
+.rv.in{opacity:1;transform:translateY(0)}
+.rl{opacity:0;transform:translateX(-32px);transition:opacity .8s ease,transform .8s ease}.rl.in{opacity:1;transform:translateX(0)}
+.rr{opacity:0;transform:translateX(32px);transition:opacity .8s ease,transform .8s ease}.rr.in{opacity:1;transform:translateX(0)}
+.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}.d4{transition-delay:.4s}.d5{transition-delay:.5s}
+
+/* ═══════════════════════════════════════════
+   MENU
+═══════════════════════════════════════════ */
+.mt{font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;
+  padding:8px 18px;border:1px solid rgba(212,175,55,.2);color:rgba(201,184,154,.6);
+  background:transparent;cursor:pointer;transition:all .3s;white-space:nowrap}
+.mt:hover{color:var(--gold);border-color:rgba(212,175,55,.5)}
+.mt.on{background:rgba(212,175,55,.1);border-color:var(--gold);color:var(--gold)}
+.mc{background:linear-gradient(145deg,rgba(28,5,5,.92),rgba(40,10,10,.92));
+  border:1px solid rgba(212,175,55,.1);position:relative;overflow:hidden;transition:all .4s;cursor:default}
+.mc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:0;transition:opacity .4s}
+.mc:hover{border-color:rgba(212,175,55,.38);transform:translateY(-5px);box-shadow:0 18px 44px rgba(0,0,0,.55)}
+.mc:hover::before{opacity:1}
+.mc:hover .mc-img{transform:scale(1.07)}
+.mc-img{width:100%;height:185px;object-fit:cover;display:block;transition:transform .6s}
+.mc-iw{overflow:hidden;height:185px;position:relative}
+.mc-iw::after{content:'';position:absolute;bottom:0;left:0;right:0;height:55px;background:linear-gradient(to top,rgba(28,5,5,.96),transparent)}
+.mc-bd{padding:18px 20px 20px}
+.mc-nm{font-family:'Playfair Display',serif;font-size:1.08rem;color:var(--cream);margin-bottom:6px;line-height:1.3}
+.mc-dc{font-size:.9rem;color:#7a6050;font-style:italic;line-height:1.65;margin-bottom:12px}
+.mc-pr{font-family:'Playfair Display',serif;font-size:1.22rem;color:var(--gold)}
+.mc-wt{font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.1em;color:rgba(212,175,55,.4);text-transform:uppercase}
+.fbg{position:absolute;top:10px;right:10px;background:rgba(196,74,31,.88);backdrop-filter:blur(4px);
+  padding:3px 9px;font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:.08em;color:#fff;z-index:2}
+.fav-star{position:absolute;top:10px;left:10px;width:32px;height:32px;border:1px solid rgba(212,175,55,.32);
+  background:rgba(8,2,2,.72);backdrop-filter:blur(5px);color:#8a7a64;z-index:3;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:1.15rem;transition:color .2s ease,background .2s ease,transform .2s ease}
+.fav-star:hover{transform:translateY(-1px);background:rgba(26,4,4,.9);color:var(--gold)}
+.fav-star.on{color:#ffd34d}
+.sn-pending{background:rgba(196,74,31,.18);color:#e07040;border:1px solid rgba(196,74,31,.28)}
+.gp-action{display:block;width:100%;padding:10px 16px;text-align:left;font-family:'Cormorant Garamond',serif;font-size:.92rem;color:var(--creamy);
+  background:none;border:none;cursor:pointer;text-decoration:none;transition:all .25s}
+.gp-action:hover{color:var(--gold);background:rgba(212,175,55,.06);padding-left:22px}
+
+/* ═══════════════════════════════════════════
+   REVIEW CARD
+═══════════════════════════════════════════ */
+.rc{background:linear-gradient(145deg,rgba(26,4,4,.95),rgba(35,6,6,.95));
+  border:1px solid rgba(212,175,55,.1);padding:26px 24px;transition:all .35s}
+.rc:hover{border-color:rgba(212,175,55,.3);transform:translateY(-3px);box-shadow:0 12px 32px rgba(0,0,0,.4)}
+
+/* ═══════════════════════════════════════════
+   PARALLAX
+═══════════════════════════════════════════ */
+.par{background:linear-gradient(to bottom,rgba(8,2,2,.9),rgba(74,14,14,.52),rgba(8,2,2,.9)),
+  url('https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?w=1600&q=80') center/cover fixed;
+  padding:80px 16px;text-align:center}
+
+/* ═══════════════════════════════════════════
+   MODAL SYSTEM
+═══════════════════════════════════════════ */
+.mb{position:fixed;inset:0;background:rgba(0,0,0,.88);backdrop-filter:blur(6px);z-index:900;
+  display:flex;align-items:center;justify-content:center;padding:16px;
+  opacity:0;pointer-events:none;transition:opacity .35s}
+.mb.open{opacity:1;pointer-events:all}
+.mk{background:linear-gradient(145deg,#1e0505,#2d0808);border:1px solid rgba(212,175,55,.22);
+  width:100%;max-width:440px;max-height:92vh;overflow-y:auto;
+  transform:translateY(22px) scale(.97);transition:transform .35s}
+.mb.open .mk{transform:translateY(0) scale(1)}
+.oi{width:44px;height:52px;text-align:center;background:rgba(255,255,255,.04);
+  border:1px solid rgba(212,175,55,.2);color:var(--cream);
+  font-family:'Playfair Display',serif;font-size:1.4rem;outline:none;transition:border-color .3s}
+.oi:focus{border-color:var(--gold);background:rgba(212,175,55,.06)}
+.sb{font-size:1.5rem;color:rgba(212,175,55,.25);cursor:pointer;transition:color .2s;background:none;border:none}
+.sb.on{color:var(--gold)}
+
+/* ═══════════════════════════════════════════
+   OVERLAY PAGES
+═══════════════════════════════════════════ */
+#ovl{display:none;position:fixed;inset:0;background:var(--dark);z-index:800;overflow-y:auto}
+
+/* ═══════════════════════════════════════════
+   ADMIN PANEL
+═══════════════════════════════════════════ */
+#admin-view{display:none;min-height:100vh}
+
+/* Admin sidebar */
+#adm-sidebar{width:230px;min-height:100vh;background:linear-gradient(180deg,#1a0404,var(--dark));
+  border-right:1px solid rgba(212,175,55,.1);flex-shrink:0;display:flex;flex-direction:column;
+  position:fixed;top:0;left:0}
+.slink{display:flex;align-items:center;gap:10px;padding:11px 18px;
+  font-family:'Cinzel',serif;font-size:.59rem;letter-spacing:.12em;text-transform:uppercase;
+  color:#7a5a40;cursor:pointer;transition:all .3s;border-left:2px solid transparent;
+  background:none;border-top:none;border-right:none;border-bottom:none;width:100%;text-align:left}
+.slink:hover,.slink.on{color:var(--gold);background:rgba(212,175,55,.06);border-left-color:var(--gold)}
+#adm-main{margin-left:230px;padding:28px;min-height:100vh}
+
+/* Admin tables */
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{font-family:'Cinzel',serif;font-size:.57rem;letter-spacing:.1em;text-transform:uppercase;
+  color:#6a5040;padding:9px 12px;border-bottom:1px solid rgba(212,175,55,.1);text-align:left;white-space:nowrap}
+.tbl td{padding:10px 12px;border-bottom:1px solid rgba(212,175,55,.05);font-size:.9rem;color:var(--creamy);vertical-align:middle}
+.tbl tr:hover td{background:rgba(212,175,55,.025)}
+.tbl tr{cursor:pointer}
+
+/* Status badges */
+.sn{display:inline-block;padding:3px 9px;font-size:.67rem;letter-spacing:.05em;font-family:'Cinzel',serif}
+.sn-new{background:rgba(196,74,31,.18);color:#e07040;border:1px solid rgba(196,74,31,.28)}
+.sn-confirmed{background:rgba(212,175,55,.12);color:var(--gold);border:1px solid rgba(212,175,55,.22)}
+.sn-done{background:rgba(30,120,60,.15);color:#50c080;border:1px solid rgba(30,120,60,.2)}
+.sn-cancelled{background:rgba(80,80,80,.15);color:#7a7060;border:1px solid rgba(80,80,80,.2)}
+
+/* Stat cards */
+.scard{background:linear-gradient(145deg,#1e0505,#2a0a0a);border:1px solid rgba(212,175,55,.1);padding:18px 22px;transition:border-color .3s}
+.scard:hover{border-color:rgba(212,175,55,.28)}
+
+/* Admin sections */
+.asec{display:none}.asec.on{display:block}
+
+/* Menu editor row */
+.me-row{background:rgba(255,255,255,.02);border:1px solid rgba(212,175,55,.07);padding:10px 12px;margin-bottom:7px;display:flex;align-items:center;gap:8px;transition:border-color .3s}
+.me-row:hover{border-color:rgba(212,175,55,.2)}
+.me-inp{background:transparent;border:none;border-bottom:1px solid rgba(212,175,55,.12);color:var(--cream);font-family:'Cormorant Garamond',serif;font-size:.92rem;padding:3px 5px;outline:none;transition:border-color .3s}
+.me-inp:focus{border-bottom-color:var(--gold)}
+
+/* Danger button */
+.bdanger{display:inline-flex;align-items:center;border:1px solid rgba(196,74,31,.3);color:#e07040;font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;padding:8px 16px;background:rgba(196,74,31,.08);cursor:pointer;transition:all .3s}
+.bdanger:hover{background:rgba(196,74,31,.15)}
+
+/* New badge */
+.nbadge{background:var(--fire);color:#fff;font-size:.64rem;padding:2px 6px;border-radius:10px;font-family:sans-serif;margin-left:auto}
+
+/* Detail modal */
+.dm-row{display:flex;justify-content:space-between;align-items:flex-start;padding:8px 0;border-bottom:1px solid rgba(212,175,55,.05)}
+
+/* ═══════════════════════════════════════════
+   MISC
+═══════════════════════════════════════════ */
+@keyframes flk{0%,100%{opacity:1;transform:scaleY(1)}25%{opacity:.85;transform:scaleY(1.05)}75%{opacity:.9;transform:scaleY(.97)}}
+.fi-ico{display:inline-block;animation:flk 1.8s ease-in-out infinite}
+@keyframes rise{0%{transform:translateY(0) translateX(0);opacity:0}8%{opacity:.9}80%{opacity:.4}100%{transform:translateY(-360px) translateX(var(--dr));opacity:0}}
+.em{position:absolute;border-radius:50%;pointer-events:none;animation:rise linear infinite;opacity:0}
+@keyframes bc{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
+
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#2a0808,#1a0404);border:1px solid var(--gold);color:var(--gold);font-family:'Cormorant Garamond',serif;font-size:1rem;padding:12px 28px;z-index:9999;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+#toast.show{opacity:1}
+
+/* Responsive */
+@media(max-width:767px){
+  #contact-grid{grid-template-columns:1fr!important}
+  #adm-sidebar{display:none}
+  #adm-main{margin-left:0!important;padding:16px}
+  #adm-mobile-header{display:flex!important}
+}
+@media(min-width:768px){#adm-mobile-header{display:none!important}}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════
+     PUBLIC VIEW
+════════════════════════════════════════ -->
+<div id="public-view">
+
+<!-- NAVBAR -->
+<nav id="nav">
+  <div style="max-width:1280px;margin:0 auto;padding:0 20px;display:flex;align-items:center;justify-content:space-between">
+    <a href="#home" style="display:flex;align-items:center;gap:9px;text-decoration:none;flex-shrink:0">
+      <span class="fi-ico" style="font-size:1.5rem;color:var(--gold);filter:drop-shadow(0 0 10px rgba(212,175,55,.6))">♛</span>
+      <span style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--gold);font-weight:700">Royals</span>
+      <span style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--cream)"> Resto</span>
+    </a>
+    <!-- Desktop links -->
+    <div id="desk-links" style="display:flex;align-items:center;gap:24px">
+      <a href="#home"    class="nl">Home</a>
+      <a href="#menu"    class="nl">Меню</a>
+      <button class="nl" onclick="openPage('celebration')">Святкування</button>
+      <button class="nl" onclick="openPage('gallery')">Галерея</button>
+      <button class="nl" onclick="openPage('about')">Про нас</button>
+      <a href="#reviews" class="nl">Відгуки</a>
+      <a href="#contact" class="nl">Контакти</a>
+    </div>
+    <!-- Right cluster -->
+    <div style="display:flex;align-items:center;gap:10px">
+      <!-- Phone auth button (guests) -->
+      <button id="nav-login-btn" onclick="openAuth()" class="bo" style="font-size:.62rem;padding:9px 18px;display:none">🔑 Увійти</button>
+      <!-- Admin panel shortcut (only for admin) -->
+      <button id="nav-admin-btn" onclick="switchToAdmin()">⚙️ Адмін</button>
+      <!-- Logged-in user dropdown -->
+      <div id="nav-user" style="position:relative;display:none">
+        <div id="nav-av" onclick="toggleDD()" class="nav-av"></div>
+        <div id="nav-dd" class="udd" style="display:none">
+          <div style="padding:12px 16px 10px;border-bottom:1px solid rgba(212,175,55,.1)">
+            <p id="dd-nm" style="font-family:'Playfair Display',serif;color:var(--gold);font-size:.9rem"></p>
+            <p id="dd-ph" style="font-size:.75rem;color:#5a4030"></p>
+          </div>
+          <button onclick="signOut()">🚪 Вийти</button>
+        </div>
+      </div>
+      <a href="#contact" class="bg" id="desk-book" style="font-size:.62rem;padding:10px 20px"><span>Забронювати</span></a>
+      <!-- Burger -->
+      <button id="brg" onclick="toggleMob()" style="display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px">
+        <span style="display:block;width:24px;height:1.5px;background:var(--gold)"></span>
+        <span style="display:block;width:24px;height:1.5px;background:var(--gold)"></span>
+        <span style="display:block;width:16px;height:1.5px;background:var(--gold)"></span>
+      </button>
+    </div>
+  </div>
+  <!-- Mobile nav -->
+  <div id="mob-nav" style="display:none;background:rgba(6,1,1,.98);backdrop-filter:blur(16px);border-top:1px solid rgba(212,175,55,.1);padding:24px 20px 30px">
+    <div style="display:flex;flex-direction:column;gap:18px;margin-bottom:22px">
+      <a href="#home"    class="nl" onclick="closeMob()">Home</a>
+      <a href="#menu"    class="nl" onclick="closeMob()">Меню</a>
+      <button class="nl" style="text-align:left" onclick="openPage('celebration');closeMob()">Святкування</button>
+      <button class="nl" style="text-align:left" onclick="openPage('gallery');closeMob()">Галерея</button>
+      <button class="nl" style="text-align:left" onclick="openPage('about');closeMob()">Про нас</button>
+      <a href="#reviews" class="nl" onclick="closeMob()">Відгуки</a>
+      <a href="#contact" class="nl" onclick="closeMob()">Контакти</a>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <button id="mob-auth-btn" onclick="openAuth();closeMob()" class="bo" style="width:100%">🔑 Увійти</button>
+      <button id="mob-admin-btn" onclick="switchToAdmin();closeMob()" style="display:none;width:100%" class="bo">⚙️ Адмін-панель</button>
+      <a href="#contact" class="bg" onclick="closeMob()" style="width:100%;justify-content:center"><span>Забронювати стіл</span></a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="home" style="position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden">
+  <div class="hero-bg"></div>
+  <div id="embers" style="position:absolute;inset:0;pointer-events:none;z-index:1;overflow:hidden"></div>
+  <div style="position:relative;z-index:2;text-align:center;padding:80px 16px 40px;max-width:900px;width:100%">
+    <div class="rv"><span style="font-size:clamp(2.2rem,5.5vw,3.8rem);color:var(--gold);filter:drop-shadow(0 0 18px rgba(212,175,55,.6));display:block;margin-bottom:10px">♛</span></div>
+    <h1 class="ht rv d1">Royals Resto</h1>
+    <div class="rv d2" style="margin:14px auto;max-width:100px"><div class="gl"></div></div>
+    <p class="rv d3" style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.05rem,2.5vw,1.45rem);color:var(--creamy);font-style:italic;letter-spacing:.06em">Королівство смаку — вогонь, м'ясо, традиції</p>
+    <p class="rv d3" style="font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.22em;color:rgba(212,175,55,.45);text-transform:uppercase;margin-top:8px">Кольчино · Закарпатська область</p>
+    <div class="rv d4" style="display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin-top:34px">
+      <a href="#contact" class="bg"><span>🍷 Забронювати стіл</span></a>
+      <a href="#menu"    class="bo">📜 Перейти до меню</a>
+    </div>
+    <div class="rv d5" style="display:grid;grid-template-columns:repeat(3,1fr);max-width:340px;margin:46px auto 0;border:1px solid rgba(212,175,55,.12)">
+      <div style="padding:14px;text-align:center;border-right:1px solid rgba(212,175,55,.12)"><p style="font-family:'Playfair Display',serif;font-size:1.9rem;font-weight:700;color:var(--gold);line-height:1">8+</p><p style="font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.1em;color:#5a4030;text-transform:uppercase;margin-top:4px">Років</p></div>
+      <div style="padding:14px;text-align:center;border-right:1px solid rgba(212,175,55,.12)"><p style="font-family:'Playfair Display',serif;font-size:1.9rem;font-weight:700;color:var(--gold);line-height:1">70+</p><p style="font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.1em;color:#5a4030;text-transform:uppercase;margin-top:4px">Страв</p></div>
+      <div style="padding:14px;text-align:center"><p style="font-family:'Playfair Display',serif;font-size:1.9rem;font-weight:700;color:var(--gold);line-height:1">5★</p><p style="font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.1em;color:#5a4030;text-transform:uppercase;margin-top:4px">Рейтинг</p></div>
+    </div>
+  </div>
+  <div style="position:absolute;bottom:28px;left:50%;animation:bc 2.5s ease-in-out infinite;z-index:2"><div style="width:1px;height:42px;background:linear-gradient(to bottom,var(--gold),transparent);margin:0 auto"></div></div>
+</section>
+
+<!-- MENU -->
+<section id="menu" style="padding:90px 0 80px;background:linear-gradient(180deg,var(--dark) 0%,#120303 50%,var(--dark) 100%)">
+  <div style="max-width:1280px;margin:0 auto;padding:0 20px">
+    <div style="text-align:center;max-width:580px;margin:0 auto 50px">
+      <p class="orn rv" style="margin-bottom:10px">✦ &nbsp;МЕНЮ&nbsp; ✦</p>
+      <h2 class="st rv d1" style="margin-bottom:12px">Королівська трапеза</h2>
+      <div class="rv d2" style="margin:0 auto 14px;max-width:80px"><div class="gl"></div></div>
+      <p class="ss rv d3">Все готується на живому вогні з місцевих продуктів Закарпаття</p>
+    </div>
+    <div class="rv" style="display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-bottom:36px">
+      <button class="mt on" onclick="swTab('zakusky',this)">Закуски</button>
+      <button class="mt"    onclick="swTab('salaty',this)">Салати</button>
+      <button class="mt"    onclick="swTab('mangal',this)">🔥 Мангал</button>
+      <button class="mt"    onclick="swTab('vertel',this)">🐑 Вертел</button>
+      <button class="mt"    onclick="swTab('ryba',this)">Риба</button>
+      <button class="mt"    onclick="swTab('garnyry',this)">Гарніри</button>
+      <button class="mt"    onclick="swTab('napoi',this)">Напої</button>
+    </div>
+    <div id="mgrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px"></div>
+  </div>
+</section>
+
+<!-- PARALLAX QUOTE -->
+<div class="par">
+  <div class="rv">
+    <p style="font-family:'Playfair Display',serif;font-size:clamp(1.7rem,4vw,3rem);color:var(--gold);font-style:italic;margin-bottom:10px;filter:drop-shadow(0 2px 18px rgba(212,175,55,.3))">"Де є вогонь — є свято"</p>
+    <p class="orn">✦ &nbsp; ✦ &nbsp; ✦</p>
+  </div>
+</div>
+
+<!-- REVIEWS -->
+<section id="reviews" style="padding:90px 0;background:linear-gradient(135deg,rgba(26,4,4,1),rgba(8,2,2,1))">
+  <div style="max-width:1280px;margin:0 auto;padding:0 20px">
+    <div style="text-align:center;margin-bottom:52px">
+      <p class="orn rv" style="margin-bottom:10px">✦ &nbsp;ВІДГУКИ&nbsp; ✦</p>
+      <h2 class="st rv d1">Що кажуть гості</h2>
+      <div class="rv d2" style="max-width:80px;margin:14px auto 0"><div class="gl"></div></div>
+      <div class="rv d3" style="display:flex;align-items:center;justify-content:center;gap:10px;margin-top:14px">
+        <span style="color:var(--gold);font-size:1.2rem;letter-spacing:.1em">★★★★★</span>
+        <span style="font-family:'Playfair Display',serif;font-size:2rem;color:var(--gold)">5.0</span>
+        <span style="color:#5a4030;font-size:.88rem"> / 340+ відгуків</span>
+      </div>
+    </div>
+    <div id="rev-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px;margin-bottom:46px"></div>
+    <!-- Write review (logged in) -->
+    <div id="wr-wrap" style="display:none;max-width:580px;margin:0 auto">
+      <div style="background:linear-gradient(145deg,rgba(26,4,4,.9),rgba(40,10,10,.9));border:1px solid rgba(212,175,55,.15);padding:30px 26px">
+        <h3 style="font-family:'Playfair Display',serif;color:var(--gold);font-size:1.3rem;margin-bottom:18px">✍️ Залишити відгук</h3>
+        <div style="margin-bottom:14px">
+          <label class="fl">Оцінка</label>
+          <div id="sp" style="display:flex;gap:5px">
+            <button class="sb on" data-v="1" onclick="setSt(1)">★</button>
+            <button class="sb on" data-v="2" onclick="setSt(2)">★</button>
+            <button class="sb on" data-v="3" onclick="setSt(3)">★</button>
+            <button class="sb on" data-v="4" onclick="setSt(4)">★</button>
+            <button class="sb on" data-v="5" onclick="setSt(5)">★</button>
+          </div>
+        </div>
+        <div style="margin-bottom:18px"><label class="fl">Ваш відгук</label><textarea id="rv-txt" class="fi" rows="4" placeholder="Розкажіть про свій візит..."></textarea></div>
+        <button onclick="subRev()" class="bg"><span>Надіслати відгук</span></button>
+      </div>
+    </div>
+    <p id="rl-prompt" style="text-align:center;color:#5a4030;font-style:italic;font-size:.92rem">
+      <button onclick="openAuth()" style="background:none;border:none;color:var(--gold);cursor:pointer;font-family:'Cormorant Garamond',serif;font-size:.92rem;text-decoration:underline;text-underline-offset:3px">Увійдіть</button>, щоб залишити відгук
+    </p>
+  </div>
+</section>
+
+<!-- CONTACT + BOOKING -->
+<section id="contact" style="padding:90px 0;background:linear-gradient(180deg,var(--dark),rgba(26,4,4,1))">
+  <div style="max-width:1280px;margin:0 auto;padding:0 20px">
+    <div style="text-align:center;margin-bottom:56px">
+      <p class="orn rv" style="margin-bottom:10px">✦ &nbsp;КОНТАКТИ&nbsp; ✦</p>
+      <h2 class="st rv d1">Забронювати стіл</h2>
+      <div class="rv d2" style="max-width:80px;margin:14px auto 0"><div class="gl"></div></div>
+    </div>
+    <div id="contact-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start">
+      <div class="rl">
+        <div id="bk-banner" style="display:none;background:rgba(212,175,55,.07);border:1px solid rgba(212,175,55,.18);padding:13px 16px;margin-bottom:20px;align-items:center;gap:12px">
+          <span style="font-size:1.3rem">👋</span>
+          <div><p id="bk-nm" style="font-family:'Playfair Display',serif;color:var(--gold);font-size:.88rem"></p><p style="font-size:.75rem;color:#6a5040">Ваш номер підставлено автоматично</p></div>
+        </div>
+        <div id="bk-guest" style="background:rgba(255,255,255,.02);border:1px solid rgba(212,175,55,.08);padding:11px 14px;margin-bottom:20px;display:flex;align-items:center;gap:10px">
+          <span>💡</span>
+          <p style="font-size:.83rem;color:#6a5040"><button onclick="openAuth()" style="background:none;border:none;color:var(--gold);cursor:pointer;font-family:'Cormorant Garamond',serif;font-size:.83rem;text-decoration:underline">Увійдіть через телефон</button> — і ваш номер підставиться автоматично</p>
+        </div>
+        <h3 style="font-family:'Playfair Display',serif;color:var(--gold);font-size:1.5rem;margin-bottom:24px">Форма бронювання</h3>
+        <form onsubmit="subBook(event)" style="display:flex;flex-direction:column;gap:14px">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div><label class="fl">Ім'я *</label><input type="text" id="b-n" class="fi" placeholder="Ваше ім'я" required/></div>
+            <div><label class="fl">Телефон *</label><input type="tel" id="b-p" class="fi" placeholder="+380 XX XXX XXXX" required/></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div><label class="fl">Дата *</label><input type="date" id="b-d" class="fi" required/></div>
+            <div><label class="fl">Час *</label><input type="time" id="b-t" class="fi" required/></div>
+          </div>
+          <div><label class="fl">Кількість людей</label>
+            <select id="b-g" class="fi"><option>1–2 особи</option><option>3–4 особи</option><option>5–8 осіб</option><option>9–15 осіб</option><option>16–30 осіб (банкет)</option></select>
+          </div>
+          <div><label class="fl">Коментар</label><textarea id="b-c" class="fi" rows="3" placeholder="Побажання, алергії, привід..."></textarea></div>
+          <button type="submit" class="bg" style="width:100%;justify-content:center"><span>👑 Забронювати стіл</span></button>
+        </form>
+        <div id="bk-ok" style="display:none;margin-top:14px;padding:16px;border:1px solid var(--gold);background:rgba(212,175,55,.07);text-align:center">
+          <p style="font-family:'Playfair Display',serif;color:var(--gold);font-size:1.05rem">✓ Бронювання прийнято!</p>
+          <p style="font-size:.85rem;color:var(--creamy);margin-top:4px">Ми зателефонуємо протягом 30 хвилин.</p>
+        </div>
+      </div>
+      <div class="rr">
+        <h3 style="font-family:'Playfair Display',serif;color:var(--gold);font-size:1.5rem;margin-bottom:26px">Як нас знайти</h3>
+        <div style="display:flex;flex-direction:column;gap:18px;margin-bottom:28px">
+          <div style="display:flex;gap:14px;align-items:flex-start"><span style="font-size:1.2rem;flex-shrink:0">📍</span><div><p style="font-family:'Playfair Display',serif;color:var(--cream);margin-bottom:2px">Адреса</p><p style="color:#9a8060;font-size:.92rem;line-height:1.6">вул. Спортивна, с. Кольчино<br/>Мукачівський р-н, Закарпатська обл., 89636</p></div></div>
+          <div style="display:flex;gap:14px;align-items:flex-start"><span style="font-size:1.2rem;flex-shrink:0">📞</span><div><p style="font-family:'Playfair Display',serif;color:var(--cream);margin-bottom:2px">Телефон</p><a href="tel:+380501234567" style="color:var(--gold);font-size:1rem;text-decoration:none">+38 (050) 123-45-67</a></div></div>
+          <div style="display:flex;gap:14px;align-items:flex-start"><span style="font-size:1.2rem;flex-shrink:0">📸</span><div><p style="font-family:'Playfair Display',serif;color:var(--cream);margin-bottom:2px">Instagram</p><a href="#" style="color:var(--gold);text-decoration:none">@royals_resto_kolchyno</a></div></div>
+          <div style="display:flex;gap:14px;align-items:flex-start"><span style="font-size:1.2rem;flex-shrink:0">🕐</span><div><p style="font-family:'Playfair Display',serif;color:var(--cream);margin-bottom:2px">Графік</p><p style="color:#9a8060;font-size:.92rem;line-height:1.6">Пн–Пт: 12:00–23:00<br/>Сб–Нд: 11:00–00:00</p></div></div>
+        </div>
+        <div style="border:1px solid rgba(212,175,55,.12);overflow:hidden;height:230px">
+          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2640.5!2d22.78!3d48.45!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDjCsDI3JzAwLjAiTiAyMsKwNDYnNDguMCJF!5e0!3m2!1suk!2sua!4v1" width="100%" height="230" style="border:0;filter:grayscale(.8) brightness(.55)" allowfullscreen loading="lazy"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer style="background:linear-gradient(180deg,rgba(26,4,4,1),rgba(4,1,1,1));border-top:1px solid rgba(212,175,55,.07);padding:46px 0 26px">
+  <div style="max-width:1280px;margin:0 auto;padding:0 20px">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:28px;margin-bottom:32px">
+      <div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px"><span style="font-size:1.3rem;color:var(--gold)">♛</span><span style="font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--gold)">Royals Resto</span></div>
+        <p style="font-size:.86rem;line-height:1.7;color:#3a2010">Королівство смаку в серці Закарпаття. Живий вогонь, свіжі продукти, королівська атмосфера.</p>
+      </div>
+      <div>
+        <p style="font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:12px">Навігація</p>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <a href="#menu"    style="color:#3a2010;font-size:.86rem;text-decoration:none;transition:color .3s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='#3a2010'">Меню</a>
+          <a href="#reviews" style="color:#3a2010;font-size:.86rem;text-decoration:none;transition:color .3s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='#3a2010'">Відгуки</a>
+          <a href="#contact" style="color:#3a2010;font-size:.86rem;text-decoration:none;transition:color .3s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='#3a2010'">Контакти</a>
+        </div>
+      </div>
+      <div>
+        <p style="font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:12px">Контакти</p>
+        <p style="font-size:.86rem;color:#3a2010;line-height:1.7">вул. Спортивна, Кольчино<br/>Закарпатська обл., 89636</p>
+        <a href="tel:+380501234567" style="color:var(--gold);font-size:.9rem;text-decoration:none;display:block;margin-top:7px">+38 (050) 123-45-67</a>
+      </div>
+    </div>
+    <div style="border-top:1px solid rgba(212,175,55,.06);padding-top:18px;text-align:center">
+      <p class="orn" style="font-size:.68rem;margin-bottom:5px">♛</p>
+      <p style="font-size:.75rem;color:#2a1408">© 2025 Royals Resto. Кольчино, Закарпатська область.</p>
+    </div>
+  </div>
+</footer>
+
+</div><!-- /public-view -->
+
+<!-- ════════════════════════════════════════
+     OVERLAY PAGES (Celebration / Gallery / About)
+════════════════════════════════════════ -->
+<div id="ovl">
+  <button onclick="closePage()" style="position:fixed;top:18px;right:20px;z-index:810;background:rgba(26,4,4,.92);border:1px solid rgba(212,175,55,.25);color:var(--gold);width:42px;height:42px;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px)">×</button>
+  <!-- CELEBRATION -->
+  <div id="pg-celebration" style="display:none;min-height:100vh;padding:75px 20px 60px">
+    <div style="max-width:1100px;margin:0 auto">
+      <div style="text-align:center;margin-bottom:50px"><p class="orn" style="margin-bottom:8px">✦ &nbsp;СВЯТКУВАННЯ&nbsp; ✦</p><h2 class="st" style="margin-bottom:12px">Свята у Royals Resto</h2><div style="max-width:70px;margin:0 auto 14px"><div class="gl"></div></div><p class="ss" style="max-width:560px;margin:0 auto">Ідеальне місце для незабутніх святкувань. Беремо на себе все.</p></div>
+      <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-bottom:44px">
+        <span style="padding:7px 18px;border:1px solid rgba(212,175,55,.3);font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold)">🎂 День народження</span>
+        <span style="padding:7px 18px;border:1px solid rgba(212,175,55,.3);font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold)">💑 День Валентина</span>
+        <span style="padding:7px 18px;border:1px solid rgba(212,175,55,.3);font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold)">🌸 8 Березня</span>
+        <span style="padding:7px 18px;border:1px solid rgba(212,175,55,.3);font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold)">🏢 Корпоратив</span>
+        <span style="padding:7px 18px;border:1px solid rgba(212,175,55,.3);font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold)">👶 Хрестини</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:44px">
+        <div style="grid-row:span 2;overflow:hidden;position:relative;height:370px"><img src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=600&q=80" style="width:100%;height:100%;object-fit:cover;transition:transform .6s;display:block" onmouseover="this.style.transform='scale(1.06)'" onmouseout="this.style.transform='scale(1)'" alt=""/><div style="position:absolute;bottom:0;left:0;right:0;height:50%;background:linear-gradient(to top,rgba(8,2,2,.85),transparent)"></div><p style="position:absolute;bottom:14px;left:14px;font-family:'Playfair Display',serif;color:var(--gold)">Декоровані столи</p></div>
+        <div style="overflow:hidden;height:178px;position:relative"><img src="https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=500&q=80" style="width:100%;height:100%;object-fit:cover;transition:transform .6s;display:block" onmouseover="this.style.transform='scale(1.06)'" onmouseout="this.style.transform='scale(1)'" alt=""/><div style="position:absolute;bottom:0;left:0;right:0;height:50%;background:linear-gradient(to top,rgba(8,2,2,.85),transparent)"></div><p style="position:absolute;bottom:10px;left:12px;font-family:'Playfair Display',serif;color:var(--gold);font-size:.88rem">Святковий торт</p></div>
+        <div style="overflow:hidden;height:178px;position:relative"><img src="https://images.unsplash.com/photo-1527529482837-4698179dc6ce?w=500&q=80" style="width:100%;height:100%;object-fit:cover;transition:transform .6s;display:block" onmouseover="this.style.transform='scale(1.06)'" onmouseout="this.style.transform='scale(1)'" alt=""/><div style="position:absolute;bottom:0;left:0;right:0;height:50%;background:linear-gradient(to top,rgba(8,2,2,.85),transparent)"></div><p style="position:absolute;bottom:10px;left:12px;font-family:'Playfair Display',serif;color:var(--gold);font-size:.88rem">Атмосфера</p></div>
+        <div style="overflow:hidden;height:178px;position:relative"><img src="https://images.unsplash.com/photo-1519671282429-b44660ead0a7?w=500&q=80" style="width:100%;height:100%;object-fit:cover;transition:transform .6s;display:block" onmouseover="this.style.transform='scale(1.06)'" onmouseout="this.style.transform='scale(1)'" alt=""/><div style="position:absolute;bottom:0;left:0;right:0;height:50%;background:linear-gradient(to top,rgba(8,2,2,.85),transparent)"></div><p style="position:absolute;bottom:10px;left:12px;font-family:'Playfair Display',serif;color:var(--gold);font-size:.88rem">Корпоративи</p></div>
+        <div style="overflow:hidden;height:178px;position:relative"><img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=500&q=80" style="width:100%;height:100%;object-fit:cover;transition:transform .6s;display:block" onmouseover="this.style.transform='scale(1.06)'" onmouseout="this.style.transform='scale(1)'" alt=""/><div style="position:absolute;bottom:0;left:0;right:0;height:50%;background:linear-gradient(to top,rgba(8,2,2,.85),transparent)"></div><p style="position:absolute;bottom:10px;left:12px;font-family:'Playfair Display',serif;color:var(--gold);font-size:.88rem">Романтика</p></div>
+      </div>
+      <div style="text-align:center"><a href="#contact" onclick="closePage()" class="bg"><span>✨ Організувати свято</span></a></div>
+    </div>
+  </div>
+  <!-- GALLERY -->
+  <div id="pg-gallery" style="display:none;min-height:100vh;padding:75px 20px 60px">
+    <div style="max-width:1200px;margin:0 auto">
+      <div style="text-align:center;margin-bottom:50px"><p class="orn" style="margin-bottom:8px">✦ &nbsp;ГАЛЕРЕЯ&nbsp; ✦</p><h2 class="st" style="margin-bottom:12px">Атмосфера Royals Resto</h2><div style="max-width:70px;margin:0 auto"><div class="gl"></div></div></div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+        <div style="grid-column:span 2;grid-row:span 2;overflow:hidden;height:412px"><img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800&q=80" style="width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s" onmouseover="this.style.transform='scale(1.06)'" onmouseout="this.style.transform='scale(1)'" alt=""/></div>
+        <div style="overflow:hidden;height:200px"><img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=500&q=80" style="width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s" onmouseover="this.style.transform='scale(1.07)'" onmouseout="this.style.transform='scale(1)'" alt=""/></div>
+        <div style="overflow:hidden;height:200px"><img src="https://images.unsplash.com/photo-1544025162-d76594e8bb2d?w=500&q=80" style="width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s" onmouseover="this.style.transform='scale(1.07)'" onmouseout="this.style.transform='scale(1)'" alt=""/></div>
+        <div style="overflow:hidden;height:200px"><img src="https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?w=500&q=80" style="width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s" onmouseover="this.style.transform='scale(1.07)'" onmouseout="this.style.transform='scale(1)'" alt=""/></div>
+        <div style="overflow:hidden;height:200px"><img src="https://images.unsplash.com/photo-1615361200141-f45040f367be?w=500&q=80" style="width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s" onmouseover="this.style.transform='scale(1.07)'" onmouseout="this.style.transform='scale(1)'" alt=""/></div>
+        <div style="overflow:hidden;height:200px"><img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=500&q=80" style="width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s" onmouseover="this.style.transform='scale(1.07)'" onmouseout="this.style.transform='scale(1)'" alt=""/></div>
+        <div style="overflow:hidden;height:200px"><img src="https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=500&q=80" style="width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s" onmouseover="this.style.transform='scale(1.07)'" onmouseout="this.style.transform='scale(1)'" alt=""/></div>
+        <div style="overflow:hidden;height:200px"><img src="https://images.unsplash.com/photo-1551183053-bf91798d047f?w=500&q=80" style="width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s" onmouseover="this.style.transform='scale(1.07)'" onmouseout="this.style.transform='scale(1)'" alt=""/></div>
+        <div style="overflow:hidden;height:200px"><img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=500&q=80" style="width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s" onmouseover="this.style.transform='scale(1.07)'" onmouseout="this.style.transform='scale(1)'" alt=""/></div>
+      </div>
+    </div>
+  </div>
+  <!-- ABOUT -->
+  <div id="pg-about" style="display:none;min-height:100vh;padding:75px 20px 60px">
+    <div style="max-width:1000px;margin:0 auto">
+      <div style="text-align:center;margin-bottom:50px"><p class="orn" style="margin-bottom:8px">✦ &nbsp;ПРО НАС&nbsp; ✦</p><h2 class="st">Де вогонь стає мистецтвом</h2><div style="max-width:70px;margin:14px auto 0"><div class="gl"></div></div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:46px;align-items:start">
+        <div>
+          <p style="font-size:1.08rem;line-height:1.85;color:var(--creamy);margin-bottom:16px">Royals Resto — це більше, ніж ресторан. Це місце, де кожна страва народжується у живому вогні відкритого мангалу, де аромат диму переплітається з ароматом свіжих карпатських трав.</p>
+          <p style="font-size:1.08rem;line-height:1.85;color:var(--creamy);margin-bottom:16px">Розташований у мальовничому Кольчино на Закарпатті, ми поєднуємо автентичні традиції з вишуканістю королівської кухні.</p>
+          <p style="font-size:1.08rem;line-height:1.85;color:var(--creamy)">Тільки свіжі місцеві продукти. Тільки справжній вогонь. Тільки королівська якість.</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:28px">
+            <div style="border-left:2px solid var(--gold);padding-left:12px"><p style="font-family:'Playfair Display',serif;font-size:.98rem;color:var(--gold)">Живий вогонь</p><p style="font-size:.82rem;color:#5a4030">Мангал і вертел щодня</p></div>
+            <div style="border-left:2px solid var(--gold);padding-left:12px"><p style="font-family:'Playfair Display',serif;font-size:.98rem;color:var(--gold)">Місцеві продукти</p><p style="font-size:.82rem;color:#5a4030">Від закарпатських фермерів</p></div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div style="overflow:hidden;height:250px"><img src="https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?w=600&q=80" style="width:100%;height:100%;object-fit:cover;display:block" alt=""/></div>
+          <div style="overflow:hidden;height:250px;margin-top:18px"><img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80" style="width:100%;height:100%;object-fit:cover;display:block" alt=""/></div>
+          <div style="overflow:hidden;height:170px"><img src="https://images.unsplash.com/photo-1544025162-d76594e8bb2d?w=600&q=80" style="width:100%;height:100%;object-fit:cover;display:block" alt=""/></div>
+          <div style="overflow:hidden;height:170px;margin-top:-18px"><img src="https://images.unsplash.com/photo-1615361200141-f45040f367be?w=600&q=80" style="width:100%;height:100%;object-fit:cover;display:block" alt=""/></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     AUTH MODAL (Phone + Admin Login)
+════════════════════════════════════════ -->
+<div id="auth-m" class="mb">
+  <div class="mk">
+    <div style="padding:34px 30px">
+      <!-- Auth type tabs -->
+      <div style="display:flex;border-bottom:1px solid rgba(212,175,55,.12);margin-bottom:26px">
+        <button id="tab-phone-btn" onclick="switchAuthTab('phone')" style="font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;padding:8px 0;margin-right:22px;border:none;border-bottom:2px solid var(--gold);background:transparent;color:var(--gold);cursor:pointer">📱 Телефон</button>
+        <button id="tab-admin-btn" onclick="switchAuthTab('admin')" style="font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;padding:8px 0;margin-right:22px;border:none;border-bottom:2px solid transparent;background:transparent;color:#6a5040;cursor:pointer">⚙️ Адмін</button>
+        <button onclick="closeAuth()" style="background:none;border:none;color:#6a5040;font-size:1.4rem;cursor:pointer;line-height:1;margin-left:auto">×</button>
+      </div>
+
+      <!-- ── PHONE TAB ── -->
+      <div id="auth-phone-tab">
+        <div id="a-s1">
+          <p style="font-size:.98rem;color:var(--creamy);margin-bottom:18px;line-height:1.6">Введіть номер телефону. Ми надішлемо SMS-код для підтвердження.</p>
+          <div style="margin-bottom:16px"><label class="fl">Номер телефону</label><input type="tel" id="a-ph" class="fi" placeholder="+380 XX XXX XXXX"/></div>
+          <button onclick="sendOTP()" class="bg" style="width:100%;justify-content:center"><span>Надіслати SMS-код →</span></button>
+          <p id="a-err" style="display:none;color:#e07040;font-size:.85rem;text-align:center;margin-top:10px"></p>
+          <p style="font-size:.72rem;color:#3a2010;text-align:center;margin-top:12px">Демо: код з'явиться у консолі (F12) або введіть <strong style="color:var(--gold)">000000</strong></p>
+        </div>
+        <div id="a-s2" style="display:none">
+          <p style="font-size:.96rem;color:var(--creamy);margin-bottom:5px">Введіть 6-значний код з SMS</p>
+          <p id="a-ph-show" style="font-family:'Playfair Display',serif;color:var(--gold);font-size:.98rem;margin-bottom:22px"></p>
+          <div style="display:flex;gap:7px;justify-content:center;margin-bottom:22px">
+            <input class="oi" type="text" maxlength="1" id="o0" oninput="otpIn(0)" onkeydown="otpKey(event,0)"/>
+            <input class="oi" type="text" maxlength="1" id="o1" oninput="otpIn(1)" onkeydown="otpKey(event,1)"/>
+            <input class="oi" type="text" maxlength="1" id="o2" oninput="otpIn(2)" onkeydown="otpKey(event,2)"/>
+            <input class="oi" type="text" maxlength="1" id="o3" oninput="otpIn(3)" onkeydown="otpKey(event,3)"/>
+            <input class="oi" type="text" maxlength="1" id="o4" oninput="otpIn(4)" onkeydown="otpKey(event,4)"/>
+            <input class="oi" type="text" maxlength="1" id="o5" oninput="otpIn(5)" onkeydown="otpKey(event,5)"/>
+          </div>
+          <button onclick="verOTP()" class="bg" style="width:100%;justify-content:center"><span>Підтвердити →</span></button>
+          <p id="o-err" style="display:none;color:#e07040;font-size:.85rem;text-align:center;margin-top:10px"></p>
+          <div style="display:flex;align-items:center;justify-content:center;gap:14px;margin-top:14px">
+            <button onclick="backPhone()" style="background:none;border:none;color:#6a5040;cursor:pointer;font-family:'Cormorant Garamond',serif;font-size:.85rem">← Назад</button>
+            <button id="rsnd-btn" onclick="resendOTP()" style="display:none;background:none;border:none;color:var(--gold);cursor:pointer;font-family:'Cormorant Garamond',serif;font-size:.85rem">Надіслати ще раз</button>
+            <span id="rsnd-tmr" style="font-size:.78rem;color:#3a2010">Через <span id="tmr">60</span>с</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── ADMIN TAB ── -->
+      <div id="auth-admin-tab" style="display:none">
+        <p style="font-size:.98rem;color:var(--creamy);margin-bottom:20px;line-height:1.6">Вхід для адміністраторів. Дає доступ до повної панелі управління.</p>
+        <div style="margin-bottom:14px"><label class="fl">Логін</label><input type="text" id="adm-u" class="fi" placeholder="admin" autocomplete="username" onkeydown="if(event.key==='Enter')doAdminLogin()"/></div>
+        <div style="margin-bottom:20px"><label class="fl">Пароль</label><input type="password" id="adm-p" class="fi" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doAdminLogin()"/></div>
+        <button onclick="doAdminLogin()" class="bg" style="width:100%;justify-content:center"><span>👑 Увійти як адмін →</span></button>
+        <p id="adm-err" style="display:none;color:#e07040;font-size:.85rem;text-align:center;margin-top:10px"></p>
+        <p style="font-size:.72rem;color:#3a2010;text-align:center;margin-top:12px">Логін: <strong style="color:var(--gold)">admin</strong> &nbsp;/&nbsp; Пароль: <strong style="color:var(--gold)">admin123</strong></p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     BOOKING DETAIL MODAL (admin use)
+════════════════════════════════════════ -->
+<div id="bk-modal" class="mb">
+  <div class="mk" style="max-width:480px">
+    <div style="padding:28px 26px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+        <h3 style="font-family:'Playfair Display',serif;color:var(--gold);font-size:1.25rem;margin:0">Деталі бронювання</h3>
+        <button onclick="closeBkModal()" style="background:none;border:none;color:#6a5040;font-size:1.3rem;cursor:pointer;line-height:1">×</button>
+      </div>
+      <div id="bk-detail"></div>
+      <div id="bk-actions" style="display:flex;gap:8px;margin-top:18px;flex-wrap:wrap"></div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- ════════════════════════════════════════
+     ADMIN VIEW
+════════════════════════════════════════ -->
+<div id="admin-view">
+
+  <!-- Mobile header (only on small screens) -->
+  <div id="adm-mobile-header" style="display:none;align-items:center;justify-content:space-between;padding:14px 16px;background:#1a0404;border-bottom:1px solid rgba(212,175,55,.12);position:sticky;top:0;z-index:100">
+    <div style="display:flex;align-items:center;gap:8px">
+      <span style="color:var(--gold);font-size:1.2rem">♛</span>
+      <span style="font-family:'Playfair Display',serif;color:var(--gold);font-size:.95rem">Адмін</span>
+    </div>
+    <button onclick="switchToPublic()" class="bo" style="font-size:.58rem;padding:6px 14px">← Сайт</button>
+  </div>
+
+  <div style="display:flex;min-height:100vh">
+
+    <!-- SIDEBAR -->
+    <div id="adm-sidebar">
+      <div style="padding:20px 18px 16px;border-bottom:1px solid rgba(212,175,55,.1)">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px">
+          <span style="font-size:1.3rem;color:var(--gold)">♛</span>
+          <span style="font-family:'Playfair Display',serif;font-size:.95rem;color:var(--gold)">Royals Resto</span>
+        </div>
+        <p style="font-size:.67rem;color:#4a3020;letter-spacing:.06em">Адмін-панель</p>
+      </div>
+      <nav style="padding:12px 0;flex:1">
+        <button class="slink on" onclick="showAdmSec('dashboard',this)">📊 <span>Дашборд</span></button>
+        <button class="slink" onclick="showAdmSec('bookings',this)">📅 <span>Бронювання</span><span class="nbadge" id="nb-bk" style="display:none">0</span></button>
+        <button class="slink" onclick="showAdmSec('menu',this)">✏️ <span>Редагування меню</span></button>
+        <button class="slink" onclick="showAdmSec('reviews',this)">⭐ <span>Відгуки</span></button>
+        <button class="slink" onclick="showAdmSec('settings',this)">⚙️ <span>Налаштування</span></button>
+      </nav>
+      <div style="padding:14px 18px;border-top:1px solid rgba(212,175,55,.07)">
+        <p id="sb-user" style="font-size:.7rem;color:#4a3020;margin-bottom:8px"></p>
+        <button onclick="switchToPublic()" style="font-family:'Cinzel',serif;font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:#5a4030;background:none;border:none;cursor:pointer;transition:color .3s;display:block;margin-bottom:6px" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='#5a4030'">← Повернутись на сайт</button>
+        <button onclick="adminLogout()" style="font-family:'Cinzel',serif;font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:#7a4040;background:none;border:none;cursor:pointer;transition:color .3s" onmouseover="this.style.color='#e07040'" onmouseout="this.style.color='#7a4040'">🚪 Вийти з адміна</button>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="adm-main">
+
+      <!-- ── DASHBOARD ── -->
+      <div id="sec-dashboard" class="asec on">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px;padding-bottom:18px;border-bottom:1px solid rgba(212,175,55,.08)">
+          <div>
+            <h2 style="font-family:'Playfair Display',serif;color:var(--gold);font-size:1.5rem;margin:0">Дашборд</h2>
+            <p id="today-lbl" style="font-size:.82rem;color:#5a4030;margin-top:3px"></p>
+          </div>
+          <button onclick="addDemoBooking()" class="bo" style="font-size:.58rem">+ Тестове бронювання</button>
+        </div>
+        <!-- Stats -->
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:28px">
+          <div class="scard"><p style="font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:#6a5040;margin-bottom:7px">Всього броней</p><p id="ds-tot" style="font-family:'Playfair Display',serif;font-size:2rem;color:var(--gold)">0</p></div>
+          <div class="scard"><p style="font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:#6a5040;margin-bottom:7px">Нові</p><p id="ds-new" style="font-family:'Playfair Display',serif;font-size:2rem;color:#e07040">0</p></div>
+          <div class="scard"><p style="font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:#6a5040;margin-bottom:7px">Сьогодні</p><p id="ds-tod" style="font-family:'Playfair Display',serif;font-size:2rem;color:var(--cream)">0</p></div>
+          <div class="scard"><p style="font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:#6a5040;margin-bottom:7px">Підтверджено</p><p id="ds-con" style="font-family:'Playfair Display',serif;font-size:2rem;color:#50c080">0</p></div>
+        </div>
+        <!-- Recent bookings table -->
+        <div class="scard">
+          <h3 style="font-family:'Playfair Display',serif;color:var(--gold);font-size:1rem;margin-bottom:14px">Останні бронювання</h3>
+          <div style="overflow-x:auto">
+            <table class="tbl" id="ds-tbl">
+              <thead><tr><th>Гість</th><th>Телефон</th><th>Дата</th><th>Час</th><th>Людей</th><th>Статус</th><th>Дії</th></tr></thead>
+              <tbody id="ds-body"></tbody>
+            </table>
+            <p id="ds-empty" style="display:none;text-align:center;color:#4a3520;padding:20px;font-style:italic">Бронювань ще немає. Натисніть «Тестове бронювання» для демо.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── BOOKINGS ── -->
+      <div id="sec-bookings" class="asec">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:22px;padding-bottom:16px;border-bottom:1px solid rgba(212,175,55,.08)">
+          <h2 style="font-family:'Playfair Display',serif;color:var(--gold);font-size:1.5rem;margin:0">Всі бронювання</h2>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <select id="bk-filter" onchange="renderAdmBookings()" style="background:#1a0404;border:1px solid rgba(212,175,55,.2);color:var(--creamy);padding:7px 12px;font-family:'Cormorant Garamond',serif;font-size:.88rem;outline:none;cursor:pointer">
+              <option value="">Всі статуси</option>
+              <option value="new">Нові</option>
+              <option value="confirmed">Підтверджені</option>
+              <option value="done">Виконані</option>
+              <option value="cancelled">Скасовані</option>
+            </select>
+            <button onclick="markAllConfirmed()" class="bo" style="font-size:.58rem">✓ Всі переглянуті</button>
+            <button onclick="exportCSV()" class="bo" style="font-size:.58rem">⬇ CSV</button>
+          </div>
+        </div>
+        <div class="scard" style="overflow-x:auto">
+          <table class="tbl">
+            <thead><tr><th>#</th><th>Гість</th><th>Телефон</th><th>Дата & Час</th><th>Людей</th><th>Привід</th><th>Коментар</th><th>Статус</th><th>Дії</th></tr></thead>
+            <tbody id="bk-body"></tbody>
+          </table>
+          <p id="bk-empty" style="display:none;text-align:center;color:#4a3520;padding:20px;font-style:italic">Немає бронювань</p>
+        </div>
+      </div>
+
+      <!-- ── MENU EDITOR ── -->
+      <div id="sec-menu" class="asec">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:22px;padding-bottom:16px;border-bottom:1px solid rgba(212,175,55,.08)">
+          <div>
+            <h2 style="font-family:'Playfair Display',serif;color:var(--gold);font-size:1.5rem;margin:0">Редагування меню</h2>
+            <p style="font-size:.75rem;color:#5a4030;margin-top:3px">Зміни зберігаються автоматично і одразу відображаються на сайті</p>
+          </div>
+          <button onclick="addMenuItem()" class="bo" style="font-size:.58rem">+ Додати страву</button>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px" id="adm-menu-tabs"></div>
+        <div id="adm-menu-list" class="scard"></div>
+      </div>
+
+      <!-- ── REVIEWS ── -->
+      <div id="sec-reviews" class="asec">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;padding-bottom:16px;border-bottom:1px solid rgba(212,175,55,.08)">
+          <h2 style="font-family:'Playfair Display',serif;color:var(--gold);font-size:1.5rem;margin:0">Відгуки гостей</h2>
+          <span id="rv-cnt" style="font-family:'Playfair Display',serif;font-size:1rem;color:var(--gold)"></span>
+        </div>
+        <div id="adm-rv-list"></div>
+        <p id="adm-rv-empty" style="display:none;text-align:center;color:#4a3520;padding:20px;font-style:italic">Відгуків від авторизованих гостей ще немає</p>
+      </div>
+
+      <!-- ── SETTINGS ── -->
+      <div id="sec-settings" class="asec">
+        <div style="margin-bottom:22px;padding-bottom:16px;border-bottom:1px solid rgba(212,175,55,.08)">
+          <h2 style="font-family:'Playfair Display',serif;color:var(--gold);font-size:1.5rem;margin:0">Налаштування</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px">
+          <!-- Restaurant info -->
+          <div class="scard">
+            <h3 style="font-family:'Playfair Display',serif;color:var(--gold);font-size:1rem;margin-bottom:16px">Інформація ресторану</h3>
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <div><label class="fl">Назва</label><input type="text" id="s-name" class="fi" value="Royals Resto"/></div>
+              <div><label class="fl">Телефон</label><input type="text" id="s-phone" class="fi" value="+38 (050) 123-45-67"/></div>
+              <div><label class="fl">Instagram</label><input type="text" id="s-ig" class="fi" value="@royals_resto_kolchyno"/></div>
+              <div><label class="fl">Адреса</label><input type="text" id="s-addr" class="fi" value="вул. Спортивна, с. Кольчино, 89636"/></div>
+              <button onclick="saveRestSettings()" class="bg" style="width:100%;justify-content:center">💾 Зберегти</button>
+            </div>
+          </div>
+          <!-- Change password -->
+          <div class="scard">
+            <h3 style="font-family:'Playfair Display',serif;color:var(--gold);font-size:1rem;margin-bottom:16px">Змінити пароль адміна</h3>
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <div><label class="fl">Новий логін</label><input type="text" id="s-login" class="fi" value="admin"/></div>
+              <div><label class="fl">Новий пароль</label><input type="password" id="s-pw1" class="fi" placeholder="Мінімум 6 символів"/></div>
+              <div><label class="fl">Підтвердження</label><input type="password" id="s-pw2" class="fi" placeholder="Повторіть пароль"/></div>
+              <button onclick="changeAdminPass()" class="bg" style="width:100%;justify-content:center">🔐 Змінити</button>
+              <p id="pw-msg" style="display:none;font-size:.82rem;text-align:center"></p>
+            </div>
+          </div>
+          <!-- Danger zone -->
+          <div class="scard" style="border-color:rgba(196,74,31,.2)">
+            <h3 style="font-family:'Playfair Display',serif;color:var(--fire);font-size:1rem;margin-bottom:14px">Небезпечна зона</h3>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <button onclick="clearAllBookings()" class="bdanger" style="width:100%;justify-content:center">🗑️ Видалити всі бронювання</button>
+              <button onclick="clearAllReviews()" class="bdanger" style="width:100%;justify-content:center">🗑️ Видалити всі відгуки</button>
+              <button onclick="resetMenuToDefault()" class="bdanger" style="width:100%;justify-content:center">↩️ Скинути меню до початкового</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /adm-main -->
+  </div><!-- /flex -->
+</div><!-- /admin-view -->
+
+<!-- ════════════════════════════════════════
+     JAVASCRIPT — auth.js + data.js + app.js
+════════════════════════════════════════ -->
+<script>
+/* ═══════════════════════════════════════════════════════
+   DATA.JS — Menu data, reviews, storage helpers
+═══════════════════════════════════════════════════════ */
+
+// Default menu (restored on reset)
+const DEFAULT_MENU = {
+  zakusky:[
+    {n:"Сало з часником та зеленню",d:"Домашнє сало, в'ялене з часником, кропом та перцем. Подається на дошці з чорним хлібом.",w:"150 г",p:180,img:"https://images.unsplash.com/photo-1547592180-85f173990554?w=400&q=75",b:""},
+    {n:"М'ясна тарілка «Корона»",d:"Асорті в'ялених та копчених м'ясних делікатесів із закарпатської ферми.",w:"250 г",p:420,img:"https://images.unsplash.com/photo-1544025162-d76594e8bb2d?w=400&q=75",b:"ХІТ"},
+    {n:"Хліб-пампушки з мангалу",d:"Теплий хліб, смажений на решітці, з топленим маслом і часниковим соусом.",w:"180 г",p:150,img:"https://images.unsplash.com/photo-1509440159596-0249088772ff?w=400&q=75",b:""},
+    {n:"Кістковий бульйон «Сила вогню»",d:"Наваристий бульйон з телячих кісток, варений 8 годин. Підпалені овочі, петрушка.",w:"300 мл",p:220,img:"https://images.unsplash.com/photo-1547592180-85f173990554?w=400&q=75",b:""},
+    {n:"Шкварки зі спеціями",d:"Хрусткі свинячі шкварки з паприкою, гірцем та морською сіллю.",w:"120 г",p:160,img:"https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?w=400&q=75",b:""},
+    {n:"Овочі гриль із руколою",d:"Запечені перець, баклажан та цукіні з козячим сиром та оливковою олією.",w:"200 г",p:195,img:"https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=400&q=75",b:""},
+    {n:"Тартар з яловичини",d:"Рубана яловичина з жовтком, каперсами, цибулею-шалотом та гірчицею.",w:"150 г",p:340,img:"https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=75",b:""},
+  ],
+  salaty:[
+    {n:"Салат «Закарпатський мисливець»",d:"Копчене м'ясо, лісові гриби, маринований цибуль, рукола, волоський горіх.",w:"280 г",p:280,img:"https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&q=75",b:"ХІТ"},
+    {n:"Теплий салат із рібай",d:"Слайси стейку рібай, рукола, в'ялені томати, пармезан, трюфельна заправка.",w:"250 г",p:360,img:"https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&q=75",b:""},
+    {n:"Цезар із курчам гриль",d:"Куряче філе з мангалу, романо, пармезан, хрусткі крутони.",w:"280 г",p:265,img:"https://images.unsplash.com/photo-1550304943-4f24f54ddde9?w=400&q=75",b:""},
+    {n:"Грецький по-королівськи",d:"Томати черрі, огірок, оливки Каламата, запечений перець, бринза.",w:"270 г",p:230,img:"https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=400&q=75",b:""},
+    {n:"Буряковий із козячим сиром",d:"Запечений буряк, козячий сир, мед, волоський горіх.",w:"220 г",p:210,img:"https://images.unsplash.com/photo-1551218808-94e220e084d2?w=400&q=75",b:""},
+    {n:"Телячий карпаччо",d:"Тонкі слайси сирої телятини, рукола, пармезан, каперси, трюфельна олія.",w:"160 г",p:320,img:"https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=400&q=75",b:""},
+  ],
+  mangal:[
+    {n:"🔥 Шашлик «Королівський»",d:"Свиняча шийка, маринована 24 год у карпатських травах та кефірі. Тільки живе вугілля.",w:"300 г",p:380,img:"https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?w=400&q=75",b:"ХІТ"},
+    {n:"Антрекот на кістці",d:"Соковитий антрекот яловичини на решітці. Соус із карпатських грибів.",w:"500 г",p:650,img:"https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=75",b:""},
+    {n:"Рібай на кістці",d:"Преміальний стейк, прожарка на вибір. Соус із грибів і зеленого перцю.",w:"700–900 г",p:750,img:"https://images.unsplash.com/photo-1544025162-d76594e8bb2d?w=400&q=75",b:"ПРЕМІУМ"},
+    {n:"Курячі стегна гриль",d:"Мариновані в паприці, часнику та розмарині. Хрустка скоринка.",w:"350 г",p:280,img:"https://images.unsplash.com/photo-1547592180-85f173990554?w=400&q=75",b:""},
+    {n:"Ковбаски домашні",d:"Свинина + яловичина ручної роботи, 3 шт. З гірчицею та мочаним яблуком.",w:"320 г",p:320,img:"https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&q=75",b:""},
+    {n:"Асорті «Корона»",d:"Шийка, стейк, стегна, ковбаски, крила. На компанію 3–4 особи.",w:"1200 г",p:980,img:"https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&q=75",b:"ДЛЯ КОМПАНІЇ"},
+    {n:"Баранячі ребра",d:"Молода баранина, кмин та кінза. Подається з соусом із йогурту.",w:"400 г",p:480,img:"https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=400&q=75",b:""},
+    {n:"Курча табака",d:"Молоде курча під пресом зі збором карпатських трав. Хрустяча скоринка.",w:"550 г",p:320,img:"https://images.unsplash.com/photo-1615361200141-f45040f367be?w=400&q=75",b:""},
+    {n:"Стейк «T-Bone»",d:"Класичний T-Bone стейк на кістці, medium-rare. Масло з травами.",w:"600 г",p:850,img:"https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&q=75",b:"ПРЕМІУМ"},
+  ],
+  vertel:[
+    {n:"🐑 Ягня на вертелі (ціле)",d:"Молоде ягня 8–10 кг, 4 год над яблуневими дровами. Аджик та овочі. До 12 осіб.",w:"8–10 кг",p:2800,img:"https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&q=75",b:"РЕЗЕРВ 24г"},
+    {n:"🐷 Порося на вертелі (ціле)",d:"Молочний поросик 7–9 кг, начинений яблуками та розмарином. До 10 осіб.",w:"7–9 кг",p:3500,img:"https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?w=400&q=75",b:"РЕЗЕРВ 24г"},
+    {n:"Ціла качка на вертелі",d:"Качка 1.8–2 кг, фарширована апельсином та яблуком. Карамелізована скоринка.",w:"1800–2000 г",p:680,img:"https://images.unsplash.com/photo-1547592180-85f173990554?w=400&q=75",b:""},
+    {n:"Гомілка «Вертел»",d:"Свиняча рулька 800 г на вертелі. Хрустяча скоринка та ніжне м'ясо.",w:"800 г",p:420,img:"https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=75",b:""},
+    {n:"Курча на вертелі",d:"Молоде курча на рогачі з гірськими травами.",w:"550 г",p:320,img:"https://images.unsplash.com/photo-1544025162-d76594e8bb2d?w=400&q=75",b:""},
+    {n:"Телячий окіст на вертелі",d:"Цілий телячий окіст 2.5–3 кг у червоному вині та травах. До 8 осіб.",w:"2500–3000 г",p:1800,img:"https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&q=75",b:"РЕЗЕРВ 24г"},
+  ],
+  ryba:[
+    {n:"Форель на мангалі",d:"Ціла карпатська форель на решітці. Лимон, чебрець, гірські трави.",w:"400 г",p:390,img:"https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=400&q=75",b:""},
+    {n:"Осетрина на мангалі",d:"Стейк осетра, маринований у лимонному соку та кропі.",w:"300 г",p:550,img:"https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&q=75",b:""},
+    {n:"Дорадо на вугіллі",d:"Ціла дорадо, фарширована розмарином і часником.",w:"400 г",p:420,img:"https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&q=75",b:""},
+    {n:"Креветки гриль",d:"10 шт тигрових креветок на шпажці. Часниково-вершковий соус.",w:"300 г",p:480,img:"https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=400&q=75",b:""},
+    {n:"Сьомга на решітці",d:"Стейк сьомги у меді та соєвому соусі. Соус тераякі.",w:"250 г",p:490,img:"https://images.unsplash.com/photo-1551218808-94e220e084d2?w=400&q=75",b:""},
+    {n:"Сибас на мангалі",d:"Ціла риба з базиліком, лимоном та оливковою олією.",w:"450 г",p:410,img:"https://images.unsplash.com/photo-1505253716362-afaea1d3d1af?w=400&q=75",b:""},
+  ],
+  garnyry:[
+    {n:"Картопля запечена з розмарином",d:"Молода картопля в мундирі, запечена з розмарином і вершковим маслом.",w:"200 г",p:140,img:"https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=400&q=75",b:""},
+    {n:"Полента з лісовими грибами",d:"Кукурудзяна полента з тушкованими грибами та пармезаном.",w:"220 г",p:175,img:"https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=400&q=75",b:""},
+    {n:"Овочі гриль (асорті)",d:"Цукіні, баклажан, перець, спаржа та томати черрі.",w:"250 г",p:165,img:"https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=400&q=75",b:""},
+    {n:"Банош закарпатський",d:"Кукурудзяна крупа, бринза та шкварки. Традиційна гуцульська страва.",w:"250 г",p:195,img:"https://images.unsplash.com/photo-1547592180-85f173990554?w=400&q=75",b:"ТРАДИЦІЙНЕ"},
+    {n:"Варена кукурудза",d:"Карпатська кукурудза з вершковим маслом та морською сіллю.",w:"1 шт",p:120,img:"https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&q=75",b:""},
+    {n:"Картопля-фрі по-домашньому",d:"Товста картопля-фрі, смажена у фритюрі. Соус айолі.",w:"200 г",p:130,img:"https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=400&q=75",b:""},
+  ],
+  napoi:[
+    {n:"Домашнє вино «Ізабелла»",d:"Місцеве закарпатське вино з виноградників Кольчино. Легке, фруктове.",w:"0.5 л",p:280,img:"https://images.unsplash.com/photo-1551183053-bf91798d047f?w=400&q=75",b:"МІСЦЕВЕ"},
+    {n:"Медовуха карпатська",d:"Домашня медовуха на гірських травах. Слабоалкогольна, ароматна.",w:"0.5 л",p:220,img:"https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400&q=75",b:""},
+    {n:"Паленка сливова",d:"Традиційна закарпатська фруктова горілка. Подається охолодженою.",w:"50 мл",p:90,img:"https://images.unsplash.com/photo-1551183053-bf91798d047f?w=400&q=75",b:""},
+    {n:"Крафтове пиво «Зубр»",d:"Темне нефільтроване пиво місцевої броварні.",w:"0.5 л",p:110,img:"https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400&q=75",b:""},
+    {n:"Лимонад малина + базилік",d:"Авторський безалкогольний лимонад на свіжих ягодах.",w:"0.5 л",p:120,img:"https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&q=75",b:""},
+    {n:"Глінтвейн зимовий",d:"Гаряче вино з корицею, гвоздикою та закарпатськими спеціями.",w:"0.3 л",p:150,img:"https://images.unsplash.com/photo-1551183053-bf91798d047f?w=400&q=75",b:""},
+    {n:"Карпатський чай",d:"Збір гірських трав: чебрець, м'ята, звіробій. Мед у подарунок.",w:"0.4 л",p:95,img:"https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&q=75",b:""},
+    {n:"Мінеральна «Лужанська»",d:"Природна мінеральна вода із закарпатських джерел.",w:"0.5 л",p:60,img:"https://images.unsplash.com/photo-1547592180-85f173990554?w=400&q=75",b:""},
+  ],
+};
+
+const CAT_LABELS = {zakusky:'Закуски',salaty:'Салати',mangal:'🔥 Мангал',vertel:'🐑 Вертел',ryba:'Риба',garnyry:'Гарніри',napoi:'Напої'};
+
+// Static fallback reviews (always shown)
+const STATIC_REVIEWS = [
+  {s:5,t:"Порося на вертелі — це просто щось неймовірне. Хрустяча скоринка, ніжне м'ясо... Обов'язково повернемося!",a:"Оксана Ковальчук",c:"Ужгород",ag:"2 тижні тому",i:"О"},
+  {s:5,t:"Рібай на кістці — найкращий стейк в Україні. Прожарку виконали ідеально medium-rare. Вино місцеве теж чудове!",a:"Василь Петренко",c:"Львів",ag:"1 місяць тому",i:"В"},
+  {s:5,t:"Корпоратив організували на вищому рівні. Ягня на вертелі зробило всіх щасливими!",a:"Маріанна Гаврилів",c:"Івано-Франківськ",ag:"3 тижні тому",i:"М"},
+  {s:5,t:"Форель на мангалі з карпатськими травами — смак, який не забудеш. Запах диму — неймовірний!",a:"Тарас Мельник",c:"Київ",ag:"5 днів тому",i:"Т"},
+  {s:5,t:"Медовуха і шашлик «Королівський» — ідеальний дует. Тепер їдемо спеціально!",a:"Андрій та Наталя",c:"Харків",ag:"2 місяці тому",i:"А"},
+  {s:5,t:"Хрестини нашого сина пройшли ідеально. Декор, банош, ковбаски — гості в захваті!",a:"Іванна Романів",c:"Мукачево",ag:"1 місяць тому",i:"І"},
+];
+
+// Demo names for test bookings
+const DEMO_NAMES = ['Оксана Ковальчук','Василь Мельник','Тарас Бойко','Маріанна Гаврилів','Андрій Лисенко'];
+const DEMO_OCCS  = ['День народження','Вечеря','Романтична вечеря','Корпоратив','Хрестини'];
+
+/* ─── Legacy helpers kept non-persistent; Supabase is the source of truth. ─── */
+const LS = {
+  get: (k, d) => d,
+  set: (k, v) => {},
+};
+
+/* ─── Get current menu (admin edits override default) ─── */
+function getMenu() { return LS.get('menu', DEFAULT_MENU); }
+
+
+/* ═══════════════════════════════════════════════════════
+   AUTH.JS — Admin auth + Phone auth + Session management
+═══════════════════════════════════════════════════════ */
+
+// Admin credentials (changeable via settings)
+function getAdminCreds() { return LS.get('admin_creds', { login: 'admin', pass: 'admin123' }); }
+
+// Current phone user
+let phoneUser = LS.get('phone_user', null);
+
+// Legacy auth functions are overridden by the Supabase/Vercel layer below.
+function isAdminLoggedIn() { return false; }
+
+// OTP flow state
+let otpCode = '', otpTimer = null;
+
+// Auth tab (phone / admin)
+let currentAuthTab = 'phone';
+
+/* ── Switch auth tab ── */
+function switchAuthTab(tab) {
+  currentAuthTab = tab;
+  document.getElementById('auth-phone-tab').style.display = tab === 'phone' ? 'block' : 'none';
+  document.getElementById('auth-admin-tab').style.display = tab === 'admin' ? 'block' : 'none';
+  // Update tab button styles
+  const phoneBtn = document.getElementById('tab-phone-btn');
+  const adminBtn = document.getElementById('tab-admin-btn');
+  phoneBtn.style.color = tab === 'phone' ? 'var(--gold)' : '#6a5040';
+  phoneBtn.style.borderBottom = tab === 'phone' ? '2px solid var(--gold)' : '2px solid transparent';
+  adminBtn.style.color = tab === 'admin' ? 'var(--gold)' : '#6a5040';
+  adminBtn.style.borderBottom = tab === 'admin' ? '2px solid var(--gold)' : '2px solid transparent';
+}
+
+/* ── Admin login (admin / admin123) ── */
+function doAdminLogin() {
+  openAuth();
+}
+
+/* ── Admin logout ── */
+function adminLogout() {
+  switchToPublic();
+  updatePublicAuthUI();
+}
+
+/* ── Phone OTP ── */
+function sendOTP() {
+  const ph = document.getElementById('a-ph').value.trim();
+  if (!ph || ph.length < 9) { showAErr('Введіть правильний номер телефону'); return; }
+  otpCode = String(Math.floor(100000 + Math.random() * 900000));
+  console.log('[DEMO] OTP для', ph, ':', otpCode);
+  document.getElementById('a-s1').style.display = 'none';
+  document.getElementById('a-s2').style.display = 'block';
+  document.getElementById('a-ph-show').textContent = ph;
+  document.getElementById('o0').focus();
+  startOtpTimer();
+  toast('📱 SMS відправлено! (демо: консоль або 000000)');
+}
+function startOtpTimer() {
+  let s = 60;
+  document.getElementById('rsnd-tmr').style.display = 'inline';
+  document.getElementById('rsnd-btn').style.display = 'none';
+  clearInterval(otpTimer);
+  otpTimer = setInterval(() => {
+    s--;
+    document.getElementById('tmr').textContent = s;
+    if (s <= 0) { clearInterval(otpTimer); document.getElementById('rsnd-tmr').style.display = 'none'; document.getElementById('rsnd-btn').style.display = 'inline'; }
+  }, 1000);
+}
+function resendOTP() { otpCode = String(Math.floor(100000 + Math.random() * 900000)); console.log('[DEMO] New OTP:', otpCode); startOtpTimer(); toast('📱 Новий код надіслано!'); }
+function otpIn(i) {
+  const v = document.getElementById('o'+i).value;
+  if (v && i < 5) document.getElementById('o'+(i+1)).focus();
+  const full = Array.from({length:6}, (_,x) => document.getElementById('o'+x).value).join('');
+  if (full.length === 6) setTimeout(verOTP, 150);
+}
+function otpKey(e, i) { if (e.key === 'Backspace' && !document.getElementById('o'+i).value && i > 0) document.getElementById('o'+(i-1)).focus(); }
+function verOTP() {
+  const entered = Array.from({length:6}, (_,i) => document.getElementById('o'+i).value).join('');
+  if (entered === otpCode || entered === '000000') {
+    phoneUser = { phone: document.getElementById('a-ph').value.trim(), name: '' };
+    LS.set('phone_user', phoneUser);
+    updatePublicAuthUI();
+    closeAuth();
+    toast('✓ Ви успішно увійшли!');
+  } else {
+    document.getElementById('o-err').textContent = 'Невірний код. Спробуйте ще раз.';
+    document.getElementById('o-err').style.display = 'block';
+    Array.from({length:6}, (_,i) => { document.getElementById('o'+i).value = ''; });
+    document.getElementById('o0').focus();
+  }
+}
+function backPhone() { document.getElementById('a-s2').style.display = 'none'; document.getElementById('a-s1').style.display = 'block'; clearInterval(otpTimer); }
+function showAErr(m) { const e = document.getElementById('a-err'); e.textContent = m; e.style.display = 'block'; setTimeout(() => e.style.display = 'none', 4000); }
+
+function signOut() {
+  phoneUser = null;
+  updatePublicAuthUI();
+  document.getElementById('nav-dd').style.display = 'none';
+  toast('Ви вийшли');
+}
+
+/* ── Auth modal ── */
+function openAuth() {
+  document.getElementById('auth-m').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  switchAuthTab('phone');
+}
+function closeAuth() {
+  document.getElementById('auth-m').classList.remove('open');
+  document.body.style.overflow = '';
+  clearInterval(otpTimer);
+}
+document.getElementById('auth-m').addEventListener('click', e => { if (e.target === document.getElementById('auth-m')) closeAuth(); });
+
+
+/* ═══════════════════════════════════════════════════════
+   APP.JS — View switching, UI, menu, reviews, booking
+═══════════════════════════════════════════════════════ */
+
+/* ── VIEW SWITCHING ── */
+
+// Switch to admin panel
+function switchToAdmin() {
+  if (!isAdminLoggedIn()) { openAuth(); switchAuthTab('admin'); return; }
+  document.getElementById('public-view').style.display = 'none';
+  document.getElementById('admin-view').style.display = 'block';
+  document.body.style.overflow = 'auto';
+  // Push URL state so back button works naturally
+  history.pushState({ view: 'admin' }, '', '#admin');
+  initAdminPanel();
+}
+
+// Switch back to public site
+function switchToPublic() {
+  document.getElementById('admin-view').style.display = 'none';
+  document.getElementById('public-view').style.display = 'block';
+  history.pushState({ view: 'public' }, '', '#');
+}
+
+// Handle browser back/forward
+window.addEventListener('popstate', e => {
+  if (window.location.hash === '#admin' && isAdminLoggedIn()) {
+    document.getElementById('public-view').style.display = 'none';
+    document.getElementById('admin-view').style.display = 'block';
+  } else {
+    document.getElementById('admin-view').style.display = 'none';
+    document.getElementById('public-view').style.display = 'block';
+  }
+});
+
+/* ── UPDATE PUBLIC NAV UI ── */
+function updatePublicAuthUI() {
+  const isAdmin = isAdminLoggedIn();
+  const lb  = document.getElementById('nav-login-btn');
+  const uw  = document.getElementById('nav-user');
+  const mab = document.getElementById('mob-auth-btn');
+  const mad = document.getElementById('mob-admin-btn');
+  const nab = document.getElementById('nav-admin-btn');
+  const wr  = document.getElementById('wr-wrap');
+  const rp  = document.getElementById('rl-prompt');
+
+  // Admin button in nav
+  nab.style.display = isAdmin ? 'block' : 'none';
+  mad.style.display = isAdmin ? 'block' : 'none';
+
+  if (phoneUser) {
+    lb.style.display = 'none';
+    uw.style.display = 'block';
+    const ini = (phoneUser.name || phoneUser.phone || '?').slice(0,2).toUpperCase();
+    document.getElementById('nav-av').textContent = ini;
+    document.getElementById('dd-nm').textContent  = phoneUser.name || 'Гість';
+    document.getElementById('dd-ph').textContent  = phoneUser.phone || '';
+    if (mab) { mab.textContent = '👤 Профіль'; mab.onclick = null; }
+    if (wr)  wr.style.display = 'block';
+    if (rp)  rp.style.display = 'none';
+    fillBookingForm();
+  } else {
+    lb.style.display = isAdmin ? 'none' : 'flex';
+    uw.style.display = 'none';
+    if (mab) { mab.textContent = '🔑 Увійти'; mab.onclick = () => { openAuth(); closeMob(); }; }
+    if (wr)  wr.style.display = 'none';
+    if (rp)  rp.style.display = 'block';
+    document.getElementById('bk-banner').style.display = 'none';
+    document.getElementById('bk-guest').style.display = 'flex';
+  }
+}
+
+/* ── NAVBAR ── */
+function toggleMob() { document.getElementById('mob-nav').style.display = document.getElementById('mob-nav').style.display === 'none' ? 'block' : 'none'; }
+function closeMob()  { document.getElementById('mob-nav').style.display = 'none'; }
+function toggleDD()  { const dd = document.getElementById('nav-dd'); dd.style.display = dd.style.display === 'none' ? 'block' : 'none'; }
+document.addEventListener('click', e => {
+  const w = document.getElementById('nav-user');
+  if (w && !w.contains(e.target)) { const dd = document.getElementById('nav-dd'); if (dd) dd.style.display = 'none'; }
+});
+
+/* ── OVERLAY PAGES ── */
+function openPage(name) {
+  document.getElementById('ovl').style.display = 'block';
+  document.body.style.overflow = 'hidden';
+  ['celebration','gallery','about'].forEach(p => document.getElementById('pg-'+p).style.display = p === name ? 'block' : 'none');
+  document.getElementById('ovl').scrollTop = 0;
+}
+function closePage() { document.getElementById('ovl').style.display = 'none'; document.body.style.overflow = ''; }
+
+/* ── PUBLIC MENU RENDER ── */
+function swTab(cat, btn) {
+  document.querySelectorAll('.mt').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  renderPublicMenu(cat);
+}
+function renderPublicMenu(cat) {
+  const items = getMenu()[cat] || [];
+  const g = document.getElementById('mgrid');
+  g.innerHTML = items.map(it => `
+    <div class="mc">
+      ${it.b ? `<div class="fbg">${it.b}</div>` : ''}
+      <div class="mc-iw"><img class="mc-img" src="${it.img||''}" alt="${esc(it.n)}" loading="lazy" onerror="this.parentElement.style.display='none'"/></div>
+      <div class="mc-bd">
+        <h3 class="mc-nm">${esc(it.n)}</h3>
+        <p class="mc-dc">${esc(it.d)}</p>
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <span class="mc-wt">${esc(it.w)}</span>
+          <span class="mc-pr">${it.p.toLocaleString()} грн</span>
+        </div>
+      </div>
+    </div>`).join('');
+  // Stagger entrance animation
+  g.querySelectorAll('.mc').forEach((c,i) => {
+    c.style.opacity = '0'; c.style.transform = 'translateY(20px)';
+    c.style.transition = `opacity .5s ease ${i*.05}s, transform .5s ease ${i*.05}s, border-color .4s, box-shadow .4s`;
+    setTimeout(() => { c.style.opacity = '1'; c.style.transform = 'translateY(0)'; }, 50 + i*50);
+  });
+}
+
+/* ── REVIEWS ── */
+let selectedStars = 5;
+function setSt(n) { selectedStars = n; document.querySelectorAll('.sb').forEach(b => b.classList.toggle('on', +b.dataset.v <= n)); }
+function renderPublicReviews() {
+  const saved = LS.get('reviews', []);
+  const all   = [...STATIC_REVIEWS, ...saved.map(r => ({...r, i:(r.a||'?').charAt(0).toUpperCase()}))];
+  document.getElementById('rev-grid').innerHTML = all.map(r => `
+    <div class="rc rv">
+      <div style="color:var(--gold);letter-spacing:.1em;font-size:1rem">${'★'.repeat(r.s||5)}${'☆'.repeat(5-(r.s||5))}</div>
+      <p style="font-size:.97rem;line-height:1.75;color:var(--creamy);font-style:italic;margin:12px 0">"${esc(r.t)}"</p>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:34px;height:34px;border-radius:50%;background:var(--burg);border:1.5px solid rgba(212,175,55,.3);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:.8rem;color:var(--gold);flex-shrink:0">${r.i||'?'}</div>
+        <div><p style="font-family:'Playfair Display',serif;font-size:.86rem;color:var(--cream)">${esc(r.a||'Гість')}</p><p style="font-size:.74rem;color:#5a4030">${esc(r.c||'')} ${r.ag||''}</p></div>
+      </div>
+    </div>`).join('');
+  initReveal();
+}
+function subRev() {
+  if (!phoneUser) { toast('Увійдіть, щоб залишити відгук'); return; }
+  const txt = document.getElementById('rv-txt').value.trim();
+  if (!txt) { toast('Напишіть текст відгуку'); return; }
+  const saved = LS.get('reviews', []);
+  saved.unshift({ s: selectedStars, t: txt, a: phoneUser.name||phoneUser.phone, c:'', ag:'щойно' });
+  LS.set('reviews', saved);
+  document.getElementById('rv-txt').value = '';
+  renderPublicReviews();
+  toast('✓ Дякуємо за відгук!');
+}
+
+/* ── BOOKING ── */
+function fillBookingForm() {
+  if (!phoneUser) return;
+  const p = document.getElementById('b-p'), n = document.getElementById('b-n');
+  if (p && phoneUser.phone) p.value = phoneUser.phone;
+  if (n && phoneUser.name)  n.value = phoneUser.name;
+  document.getElementById('bk-banner').style.display = 'flex';
+  document.getElementById('bk-guest').style.display  = 'none';
+  document.getElementById('bk-nm').textContent = '👋 ' + (phoneUser.name || phoneUser.phone);
+}
+function subBook(e) {
+  e.preventDefault();
+  const bk = {
+    id: Date.now(), status: 'new',
+    name:    document.getElementById('b-n').value.trim(),
+    phone:   document.getElementById('b-p').value.trim(),
+    date:    document.getElementById('b-d').value,
+    time:    document.getElementById('b-t').value,
+    guests:  document.getElementById('b-g').value,
+    occasion:'', comment: document.getElementById('b-c').value.trim(),
+    created: new Date().toISOString(),
+  };
+  const arr = LS.get('bookings', []); arr.push(bk); LS.set('bookings', arr);
+  document.getElementById('bk-ok').style.display = 'block';
+  e.target.reset();
+  if (phoneUser) fillBookingForm();
+  toast('✓ Бронювання прийнято!');
+  setTimeout(() => document.getElementById('bk-ok').style.display = 'none', 6000);
+}
+
+/* ── EMBERS ── */
+function buildEmbers() {
+  const c = document.getElementById('embers'); if (!c) return;
+  for (let i=0; i<16; i++) {
+    const el = document.createElement('div'); el.className='em';
+    const sz=2+Math.random()*3, x=Math.random()*100, delay=Math.random()*8, dur=4+Math.random()*6, dr=(Math.random()-.5)*80;
+    el.style.cssText=`width:${sz}px;height:${sz}px;left:${x}%;bottom:${10+Math.random()*25}%;background:${Math.random()>.5?'#D4AF37':'#C44A1F'};--dr:${dr}px;animation-duration:${dur}s;animation-delay:${delay}s`;
+    c.appendChild(el);
+  }
+}
+
+/* ── SCROLL REVEAL ── */
+function initReveal() {
+  const obs = new IntersectionObserver(en => en.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); }), {threshold:.08, rootMargin:'0px 0px -30px 0px'});
+  document.querySelectorAll('.rv,.rl,.rr').forEach(el => obs.observe(el));
+}
+
+/* ── RESPONSIVE ── */
+function fixLayout() {
+  const w = window.innerWidth;
+  document.getElementById('desk-links').style.display = w < 1024 ? 'none' : 'flex';
+  document.getElementById('desk-book').style.display  = w < 1024 ? 'none' : 'inline-flex';
+  document.getElementById('brg').style.display        = w < 1024 ? 'flex' : 'none';
+  const cg = document.getElementById('contact-grid');
+  if (cg) cg.style.gridTemplateColumns = w < 768 ? '1fr' : '1fr 1fr';
+}
+
+
+/* ═══════════════════════════════════════════════════════
+   ADMIN PANEL LOGIC
+═══════════════════════════════════════════════════════ */
+
+let admMenuCat = 'mangal';
+
+/* ── Init admin panel ── */
+function initAdminPanel() {
+  document.getElementById('sb-user').textContent = '👤 ' + getAdminCreds().login;
+  document.getElementById('today-lbl').textContent = new Date().toLocaleDateString('uk-UA', {weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  renderDashboard();
+  updateNewBadge();
+}
+
+/* ── Section switching ── */
+function showAdmSec(name, btn) {
+  document.querySelectorAll('.asec').forEach(s => s.classList.remove('on'));
+  document.querySelectorAll('.slink').forEach(b => b.classList.remove('on'));
+  document.getElementById('sec-'+name).classList.add('on');
+  btn.classList.add('on');
+  if (name === 'bookings') renderAdmBookings();
+  if (name === 'reviews')  renderAdmReviews();
+  if (name === 'menu')     { renderAdmMenuTabs(); renderAdmMenuItems(); }
+  if (name === 'dashboard') renderDashboard();
+}
+
+/* ── Badge ── */
+function updateNewBadge() {
+  const n = LS.get('bookings',[]).filter(b=>b.status==='new').length;
+  const nb = document.getElementById('nb-bk');
+  if (n > 0) { nb.textContent = n; nb.style.display = 'inline'; } else nb.style.display = 'none';
+}
+
+/* ── Dashboard ── */
+function renderDashboard() {
+  const bk = LS.get('bookings', []);
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('ds-tot').textContent = bk.length;
+  document.getElementById('ds-new').textContent = bk.filter(b=>b.status==='new').length;
+  document.getElementById('ds-tod').textContent = bk.filter(b=>b.date===today).length;
+  document.getElementById('ds-con').textContent = bk.filter(b=>b.status==='confirmed').length;
+  const recent = [...bk].reverse().slice(0,8);
+  const tb = document.getElementById('ds-body'), em = document.getElementById('ds-empty');
+  if (!recent.length) { tb.innerHTML=''; em.style.display='block'; return; }
+  em.style.display = 'none';
+  tb.innerHTML = recent.map(b => `
+    <tr onclick="openBkDetail('${b.id}')">
+      <td style="${b.status==='new'?'font-weight:600':''}">
+        ${esc(b.name||'—')} ${b.status==='new'?'<span style="display:inline-block;width:6px;height:6px;background:#e07040;border-radius:50%;vertical-align:middle;margin-left:4px"></span>':''}
+      </td>
+      <td style="font-size:.82rem">${esc(b.phone||'—')}</td>
+      <td>${fmtD(b.date)}</td><td>${b.time||'—'}</td>
+      <td style="text-align:center">${esc(b.guests||'')}</td>
+      <td><span class="sn sn-${b.status||'new'}">${stLbl(b.status)}</span></td>
+      <td>
+        ${b.status==='new'?`<button onclick="event.stopPropagation();setStatus('${b.id}','confirmed')" class="bo" style="font-size:.55rem;padding:3px 9px;margin-right:3px">✓</button>`:''}
+        ${b.status!=='cancelled'&&b.status!=='done'?`<button onclick="event.stopPropagation();setStatus('${b.id}','cancelled')" style="background:rgba(80,40,40,.15);border:1px solid rgba(80,40,40,.25);color:#9a5050;padding:3px 9px;cursor:pointer;font-family:'Cinzel',serif;font-size:.55rem">✗</button>`:''}
+      </td>
+    </tr>`).join('');
+  updateNewBadge();
+}
+
+/* ── All bookings ── */
+function renderAdmBookings() {
+  const filter = document.getElementById('bk-filter').value;
+  let bk = LS.get('bookings',[]).reverse();
+  if (filter) bk = bk.filter(b=>b.status===filter);
+  const tb = document.getElementById('bk-body'), em = document.getElementById('bk-empty');
+  if (!bk.length) { tb.innerHTML=''; em.style.display='block'; return; }
+  em.style.display = 'none';
+  tb.innerHTML = bk.map((b,i) => `
+    <tr onclick="openBkDetail('${b.id}')">
+      <td style="font-size:.72rem;color:#5a4030">#${String(i+1).padStart(3,'0')}</td>
+      <td style="${b.status==='new'?'font-weight:600':''}">${esc(b.name||'—')}</td>
+      <td style="font-size:.82rem">${esc(b.phone||'—')}</td>
+      <td>${fmtD(b.date)} ${b.time||''}</td>
+      <td>${esc(b.guests||'')}</td>
+      <td style="font-size:.82rem">${esc(b.occasion||'—')}</td>
+      <td style="font-size:.82rem;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(b.comment||'')}">${esc(b.comment||'—')}</td>
+      <td><span class="sn sn-${b.status||'new'}">${stLbl(b.status)}</span></td>
+      <td style="white-space:nowrap">
+        ${b.status==='new'?`<button onclick="event.stopPropagation();setStatus('${b.id}','confirmed');renderAdmBookings()" class="bo" style="font-size:.54rem;padding:3px 8px;margin-right:3px">✓</button>`:''}
+        ${b.status!=='cancelled'&&b.status!=='done'?`<button onclick="event.stopPropagation();setStatus('${b.id}','cancelled');renderAdmBookings()" style="background:rgba(80,40,40,.15);border:1px solid rgba(80,40,40,.25);color:#9a5050;padding:3px 8px;cursor:pointer;font-family:'Cinzel',serif;font-size:.54rem">✗</button>`:''}
+      </td>
+    </tr>`).join('');
+  updateNewBadge();
+}
+
+/* ── Set booking status ── */
+function setStatus(id, st) {
+  const bk = LS.get('bookings', []);
+  const i = bk.findIndex(b => b.id == id);
+  if (i >= 0) { bk[i].status = st; LS.set('bookings', bk); }
+  renderDashboard(); renderAdmBookings(); updateNewBadge();
+  toast(st==='confirmed'?'✓ Підтверджено':st==='done'?'✓ Виконано':'✗ Скасовано');
+}
+function markAllConfirmed() {
+  const bk = LS.get('bookings',[]).map(b => b.status==='new'?{...b,status:'confirmed'}:b);
+  LS.set('bookings',bk); renderAdmBookings(); renderDashboard(); updateNewBadge(); toast('✓ Всі нові підтверджені');
+}
+
+/* ── Booking detail modal ── */
+function openBkDetail(id) {
+  const b = LS.get('bookings',[]).find(x=>x.id==id); if(!b) return;
+  document.getElementById('bk-detail').innerHTML = `
+    <div style="display:flex;flex-direction:column;gap:0">
+      ${dr('👤 Гість',    esc(b.name||'—'))}
+      ${dr('📞 Телефон',  `<a href="tel:${b.phone}" style="color:var(--gold)">${esc(b.phone||'—')}</a>`)}
+      ${dr('📅 Дата',     fmtD(b.date))}
+      ${dr('🕐 Час',      b.time||'—')}
+      ${dr('👥 Людей',    esc(b.guests||'—'))}
+      ${b.occasion ? dr('🎉 Привід', esc(b.occasion)) : ''}
+      ${b.comment  ? dr('💬 Коментар', `<em style="color:#9a8060">${esc(b.comment)}</em>`) : ''}
+      ${dr('📊 Статус',   `<span class="sn sn-${b.status||'new'}">${stLbl(b.status)}</span>`)}
+      ${dr('🕒 Заявка',   new Date(b.created||Date.now()).toLocaleString('uk-UA'))}
+    </div>`;
+  document.getElementById('bk-actions').innerHTML = `
+    ${b.status!=='confirmed'&&b.status!=='done' ? `<button onclick="setStatus('${b.id}','confirmed');closeBkModal()" class="bg" style="flex:1;justify-content:center;padding:10px">✓ Підтвердити</button>` : ''}
+    ${b.status!=='done' ? `<button onclick="setStatus('${b.id}','done');closeBkModal()" style="background:rgba(30,100,60,.15);border:1px solid rgba(30,100,60,.3);color:#50c080;padding:10px 16px;cursor:pointer;font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.1em;flex:1;text-align:center">✓ Виконано</button>` : ''}
+    <button onclick="setStatus('${b.id}','cancelled');closeBkModal()" style="background:rgba(80,40,40,.12);border:1px solid rgba(80,40,40,.25);color:#9a5050;padding:10px 16px;cursor:pointer;font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.1em;flex:1;text-align:center">✗ Скасувати</button>`;
+  document.getElementById('bk-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeBkModal() { document.getElementById('bk-modal').classList.remove('open'); document.body.style.overflow = ''; }
+document.getElementById('bk-modal').addEventListener('click', e => { if (e.target === document.getElementById('bk-modal')) closeBkModal(); });
+function dr(l,v) { return `<div class="dm-row"><span style="font-size:.78rem;color:#6a5040;white-space:nowrap;margin-right:12px">${l}</span><span style="font-size:.88rem;color:var(--creamy);text-align:right">${v}</span></div>`; }
+
+/* ── Demo booking ── */
+function addDemoBooking() {
+  const bk = LS.get('bookings',[]);
+  const dt = new Date(); dt.setDate(dt.getDate() + Math.floor(Math.random()*7));
+  bk.push({id:Date.now(),name:DEMO_NAMES[Math.floor(Math.random()*DEMO_NAMES.length)],phone:'+380'+Math.floor(Math.random()*9e9+1e9),date:dt.toISOString().split('T')[0],time:`${12+Math.floor(Math.random()*9)}:${Math.random()>.5?'00':'30'}`,guests:['1–2 особи','3–4 особи','5–8 осіб'][Math.floor(Math.random()*3)],occasion:DEMO_OCCS[Math.floor(Math.random()*DEMO_OCCS.length)],comment:'',status:'new',created:new Date().toISOString()});
+  LS.set('bookings',bk); renderDashboard(); updateNewBadge(); toast('✓ Тестове бронювання додано');
+}
+
+/* ── CSV export ── */
+function exportCSV() {
+  const bk = LS.get('bookings',[]); if (!bk.length) { toast('Немає бронювань'); return; }
+  const h = ['ID','Ім\'я','Телефон','Дата','Час','Людей','Привід','Коментар','Статус','Дата заявки'];
+  const rows = bk.map(b=>[b.id,b.name||'',b.phone||'',b.date||'',b.time||'',b.guests||'',b.occasion||'',b.comment||'',stLbl(b.status),b.created||'']);
+  const csv = [h,...rows].map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n');
+  const a = document.createElement('a'); a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv); a.download='bookings.csv'; a.click();
+}
+
+/* ── Admin menu editor ── */
+function renderAdmMenuTabs() {
+  document.getElementById('adm-menu-tabs').innerHTML = Object.entries(CAT_LABELS).map(([k,v]) =>
+    `<button onclick="swAdmMenuCat('${k}')" style="padding:6px 14px;border:1px solid ${k===admMenuCat?'var(--gold)':'rgba(212,175,55,.2)'};background:${k===admMenuCat?'rgba(212,175,55,.1)':'transparent'};color:${k===admMenuCat?'var(--gold)':'#7a5a40'};cursor:pointer;font-family:'Cinzel',serif;font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;transition:all .2s">${v}</button>`
+  ).join('');
+}
+function swAdmMenuCat(c) { admMenuCat=c; renderAdmMenuTabs(); renderAdmMenuItems(); }
+function renderAdmMenuItems() {
+  const menu  = getMenu();
+  const items = menu[admMenuCat] || [];
+  const list  = document.getElementById('adm-menu-list');
+  if (!items.length) { list.innerHTML='<p style="color:#4a3520;font-style:italic;text-align:center;padding:16px">Немає страв</p>'; return; }
+  list.innerHTML = items.map((it,i) => `
+    <div class="me-row">
+      <span style="font-size:.7rem;color:#4a3020;min-width:22px">${i+1}</span>
+      <input class="me-inp" type="text" value="${esc(it.n)}" onchange="updMenuItem(${i},'n',this.value)" style="flex:1.5;min-width:60px" placeholder="Назва"/>
+      <input class="me-inp" type="text" value="${esc(it.d)}" onchange="updMenuItem(${i},'d',this.value)" style="flex:2;min-width:60px" placeholder="Опис"/>
+      <input class="me-inp" type="text" value="${esc(it.w)}" onchange="updMenuItem(${i},'w',this.value)" style="width:65px" placeholder="Вага"/>
+      <input class="me-inp" type="number" value="${it.p}" onchange="updMenuItem(${i},'p',+this.value)" style="width:70px;text-align:right" placeholder="Ціна"/>
+      <span style="font-size:.7rem;color:#5a4030;flex-shrink:0">грн</span>
+      <button onclick="delMenuItem(${i})" style="background:rgba(196,74,31,.1);border:1px solid rgba(196,74,31,.2);color:var(--fire);padding:4px 8px;cursor:pointer;font-size:.85rem;flex-shrink:0">×</button>
+    </div>`).join('');
+}
+function updMenuItem(i,f,v) {
+  const menu = getMenu(); if (!menu[admMenuCat]) return;
+  menu[admMenuCat][i][f] = v; LS.set('menu', menu);
+  // Live-update public menu if on same page
+  renderPublicMenu(admMenuCat);
+}
+function delMenuItem(i) {
+  if (!confirm('Видалити страву?')) return;
+  const menu = getMenu(); menu[admMenuCat].splice(i,1); LS.set('menu', menu);
+  renderAdmMenuItems();
+}
+function addMenuItem() {
+  const menu = getMenu(); if (!menu[admMenuCat]) menu[admMenuCat]=[];
+  menu[admMenuCat].push({n:'Нова страва',d:'Опис страви',w:'—',p:200,img:'',b:''});
+  LS.set('menu',menu); renderAdmMenuItems();
+}
+function resetMenuToDefault() {
+  if (!confirm('Скинути меню до початкового? Всі зміни будуть втрачені.')) return;
+  LS.set('menu', DEFAULT_MENU); renderAdmMenuItems(); renderPublicMenu(admMenuCat); toast('✓ Меню скинуто до початкового');
+}
+
+/* ── Admin reviews ── */
+function renderAdmReviews() {
+  const rv = LS.get('reviews',[]);
+  const rl = document.getElementById('adm-rv-list'), em = document.getElementById('adm-rv-empty'), rc = document.getElementById('rv-cnt');
+  rc.textContent = rv.length + ' відгуків';
+  if (!rv.length) { rl.innerHTML=''; em.style.display='block'; return; }
+  em.style.display = 'none';
+  rl.innerHTML = rv.map((r,i) => `
+    <div style="background:rgba(255,255,255,.02);border:1px solid rgba(212,175,55,.08);padding:14px 16px;margin-bottom:9px;display:flex;gap:14px;align-items:flex-start;transition:border-color .3s" onmouseover="this.style.borderColor='rgba(212,175,55,.22)'" onmouseout="this.style.borderColor='rgba(212,175,55,.08)'">
+      <div style="flex:1">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+          <span style="color:var(--gold);font-size:.88rem">${'★'.repeat(r.s||5)}${'☆'.repeat(5-(r.s||5))}</span>
+          <span style="font-family:'Playfair Display',serif;font-size:.88rem;color:var(--cream)">${esc(r.a||'Гість')}</span>
+          <span style="font-size:.72rem;color:#4a3020">${r.ag||''}</span>
+        </div>
+        <p style="font-size:.88rem;color:#9a8060;font-style:italic">"${esc(r.t)}"</p>
+      </div>
+      <button onclick="delReview(${i})" style="background:none;border:none;color:#4a3020;cursor:pointer;font-size:1rem;flex-shrink:0;transition:color .3s" onmouseover="this.style.color='var(--fire)'" onmouseout="this.style.color='#4a3020'" title="Видалити">🗑️</button>
+    </div>`).join('');
+}
+function delReview(i) {
+  if (!confirm('Видалити відгук?')) return;
+  const rv = LS.get('reviews',[]); rv.splice(i,1); LS.set('reviews',rv); renderAdmReviews(); renderPublicReviews(); toast('Відгук видалено');
+}
+function clearAllReviews() { if (!confirm('Видалити ВСІ відгуки?')) return; LS.set('reviews',[]); renderAdmReviews(); renderPublicReviews(); toast('✓ Відгуки видалено'); }
+function clearAllBookings() { if (!confirm('Видалити ВСІ бронювання?')) return; LS.set('bookings',[]); renderDashboard(); renderAdmBookings(); updateNewBadge(); toast('✓ Бронювання видалено'); }
+
+/* ── Settings ── */
+function saveRestSettings() {
+  const s = { name:document.getElementById('s-name').value, phone:document.getElementById('s-phone').value, instagram:document.getElementById('s-ig').value, address:document.getElementById('s-addr').value };
+  LS.set('rest_settings',s); toast('✓ Налаштування збережено!');
+}
+function changeAdminPass() {
+  const nl = document.getElementById('s-login').value.trim();
+  const p1 = document.getElementById('s-pw1').value;
+  const p2 = document.getElementById('s-pw2').value;
+  const msg = document.getElementById('pw-msg');
+  if (!p1) { msg.style.color='#e07040'; msg.textContent='Введіть новий пароль'; msg.style.display='block'; return; }
+  if (p1 !== p2) { msg.style.color='#e07040'; msg.textContent='Паролі не збігаються'; msg.style.display='block'; return; }
+  if (p1.length < 6) { msg.style.color='#e07040'; msg.textContent='Мінімум 6 символів'; msg.style.display='block'; return; }
+  LS.set('admin_creds', { login: nl||'admin', pass: p1 });
+  msg.style.color='#50c080'; msg.textContent='✓ Пароль змінено!'; msg.style.display='block';
+  setTimeout(() => msg.style.display='none', 3000);
+}
+
+/* ═══════════════════════════════════════════════════════
+   HELPERS
+═══════════════════════════════════════════════════════ */
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function toast(msg) { const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3400); }
+function stLbl(s) { return {new:'Нова',confirmed:'Підтверджено',done:'Виконано',cancelled:'Скасовано'}[s]||'Нова'; }
+function fmtD(d) { if(!d) return '—'; try { return new Date(d).toLocaleDateString('uk-UA',{day:'2-digit',month:'2-digit',year:'numeric'}); } catch { return d; } }
+
+
+/* ═══════════════════════════════════════════════════════
+   INIT — runs on page load
+═══════════════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+
+  // 1. Check if admin session is active → restore admin view
+  if (isAdminLoggedIn() && window.location.hash === '#admin') {
+    switchToAdmin();
+  } else {
+    // 2. Public site init
+    buildEmbers();
+    initReveal();
+    renderPublicMenu('zakusky');
+    renderPublicReviews();
+    updatePublicAuthUI();
+    // Min date for booking
+    const bd = document.getElementById('b-d');
+    if (bd) bd.min = new Date().toISOString().split('T')[0];
+    // Navbar scroll
+    window.addEventListener('scroll', () => document.getElementById('nav').classList.toggle('scrolled', scrollY > 60));
+    // Responsive
+    fixLayout(); window.addEventListener('resize', fixLayout);
+    // Close dropdown outside click
+    document.addEventListener('click', e => {
+      if (!document.getElementById('nav-user').contains(e.target))
+        document.getElementById('nav-dd').style.display = 'none';
+    });
+  }
+});
+</script>
+<script>
+/* Supabase/Vercel integration layer. All durable data goes through /api/*. */
+const rrSession = (() => {
+  try { return JSON.parse(localStorage.getItem('rr_session') || 'null'); } catch { return null; }
+})();
+const rrState = {
+  token: rrSession && rrSession.token ? rrSession.token : '',
+  user: rrSession && rrSession.user ? rrSession.user : null,
+  menuItems: [],
+  menuByCategory: {},
+  bookings: [],
+  reviews: [],
+  currentMenuCat: 'zakusky',
+  supabaseClient: null
+};
+
+function rrAuthHeaders() {
+  return rrState.token ? { Authorization: 'Bearer ' + rrState.token } : {};
+}
+
+async function rrApi(path, options) {
+  const init = options || {};
+  const headers = Object.assign({ 'Content-Type': 'application/json' }, rrAuthHeaders(), init.headers || {});
+  const res = await fetch(path, Object.assign({}, init, { headers }));
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || 'Помилка запиту до сервера');
+  return data;
+}
+
+function rrSaveSession(user, token) {
+  rrState.user = user;
+  rrState.token = token;
+  localStorage.setItem('rr_session', JSON.stringify({ userId: user.id, role: user.role, token, user }));
+}
+
+function rrClearSession() {
+  rrState.user = null;
+  rrState.token = '';
+  localStorage.removeItem('rr_session');
+}
+
+function rrGroupMenu(items) {
+  rrState.menuItems = items || [];
+  rrState.menuByCategory = rrState.menuItems.reduce((acc, item) => {
+    const cat = item.category || 'zakusky';
+    if (!acc[cat]) acc[cat] = [];
+    acc[cat].push(item);
+    return acc;
+  }, {});
+}
+
+function rrDefaultMenuItems() {
+  return Object.entries(DEFAULT_MENU).flatMap(([category, items]) => items.map(item => ({
+    name: item.n,
+    description: item.d,
+    price: item.p,
+    image_url: item.img,
+    category,
+    badge: item.b || '',
+    weight: item.w || ''
+  })));
+}
+
+function getMenu() {
+  return rrState.menuByCategory;
+}
+
+function isAdminLoggedIn() {
+  return !!(rrState.user && rrState.user.role === 'admin' && rrState.token);
+}
+
+function rrUserInitials() {
+  const source = (rrState.user && (rrState.user.username || rrState.user.email)) || '?';
+  return source.slice(0, 2).toUpperCase();
+}
+
+function rrFavorites() {
+  return rrState.user && Array.isArray(rrState.user.favorites) ? rrState.user.favorites : [];
+}
+
+async function rrLoadSession() {
+  if (!rrState.token) return;
+  try {
+    const data = await rrApi('/api/auth/me');
+    rrSaveSession(data.user, rrState.token);
+  } catch {
+    rrClearSession();
+  }
+}
+
+async function rrLoadMenu() {
+  try {
+    const data = await rrApi('/api/menu');
+    rrGroupMenu(data.items || []);
+  } catch (error) {
+    rrGroupMenu(rrDefaultMenuItems().map((item, index) => Object.assign({ id: 'local-' + index }, item)));
+    toast('Supabase недоступний: показано резервне меню');
+  }
+  renderPublicMenu(rrState.currentMenuCat);
+}
+
+async function rrLoadReviews() {
+  try {
+    const data = await rrApi('/api/reviews');
+    rrState.reviews = data.reviews || [];
+  } catch {
+    rrState.reviews = [];
+  }
+  renderPublicReviews();
+}
+
+function rrTransformAuthModal() {
+  const wrap = document.querySelector('#auth-m .mk > div');
+  if (!wrap) return;
+  wrap.innerHTML = `
+    <div style="display:flex;align-items:center;border-bottom:1px solid rgba(212,175,55,.12);margin-bottom:24px">
+      <button id="tab-login-btn" onclick="switchAuthTab('login')" style="font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;padding:8px 0;margin-right:22px;border:none;border-bottom:2px solid var(--gold);background:transparent;color:var(--gold);cursor:pointer">Увійти</button>
+      <button id="tab-register-btn" onclick="switchAuthTab('register')" style="font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;padding:8px 0;margin-right:22px;border:none;border-bottom:2px solid transparent;background:transparent;color:#6a5040;cursor:pointer">Зареєструватися</button>
+      <button onclick="closeAuth()" style="background:none;border:none;color:#6a5040;font-size:1.4rem;cursor:pointer;line-height:1;margin-left:auto">×</button>
+    </div>
+    <div id="auth-login-tab">
+      <p style="font-size:.98rem;color:var(--creamy);margin-bottom:18px;line-height:1.6">Увійдіть за логіном і паролем.</p>
+      <div style="margin-bottom:14px"><label class="fl">Логін</label><input type="text" id="login-u" class="fi" autocomplete="username" onkeydown="if(event.key==='Enter')doLogin()"/></div>
+      <div style="margin-bottom:20px"><label class="fl">Пароль</label><input type="password" id="login-p" class="fi" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"/></div>
+      <button onclick="doLogin()" class="bg" style="width:100%;justify-content:center"><span>Увійти</span></button>
+      <p id="login-err" style="display:none;color:#e07040;font-size:.85rem;text-align:center;margin-top:10px"></p>
+      <p style="font-size:.72rem;color:#3a2010;text-align:center;margin-top:12px">Адмін: <strong style="color:var(--gold)">admin</strong> / <strong style="color:var(--gold)">admin123</strong></p>
+    </div>
+    <div id="auth-register-tab" style="display:none">
+      <p style="font-size:.98rem;color:var(--creamy);margin-bottom:18px;line-height:1.6">Створіть акаунт гостя для бронювань, відгуків та обраного меню.</p>
+      <div style="margin-bottom:12px"><label class="fl">Email</label><input type="email" id="reg-email" class="fi" autocomplete="email"/></div>
+      <div style="margin-bottom:12px"><label class="fl">Логін</label><input type="text" id="reg-u" class="fi" autocomplete="username"/></div>
+      <div style="margin-bottom:12px"><label class="fl">Пароль</label><input type="password" id="reg-p" class="fi" autocomplete="new-password"/></div>
+      <div style="margin-bottom:18px"><label class="fl">Повторення паролю</label><input type="password" id="reg-p2" class="fi" autocomplete="new-password" onkeydown="if(event.key==='Enter')doRegister()"/></div>
+      <button onclick="doRegister()" class="bg" style="width:100%;justify-content:center"><span>Зареєструватися</span></button>
+      <p id="reg-err" style="display:none;color:#e07040;font-size:.85rem;text-align:center;margin-top:10px"></p>
+    </div>`;
+}
+
+function switchAuthTab(tab) {
+  const isLogin = tab !== 'register';
+  const login = document.getElementById('auth-login-tab');
+  const register = document.getElementById('auth-register-tab');
+  if (!login || !register) return;
+  login.style.display = isLogin ? 'block' : 'none';
+  register.style.display = isLogin ? 'none' : 'block';
+  document.getElementById('tab-login-btn').style.color = isLogin ? 'var(--gold)' : '#6a5040';
+  document.getElementById('tab-login-btn').style.borderBottom = isLogin ? '2px solid var(--gold)' : '2px solid transparent';
+  document.getElementById('tab-register-btn').style.color = isLogin ? '#6a5040' : 'var(--gold)';
+  document.getElementById('tab-register-btn').style.borderBottom = isLogin ? '2px solid transparent' : '2px solid var(--gold)';
+}
+
+function rrShowFormError(id, message) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.textContent = message;
+  el.style.display = 'block';
+}
+
+async function doLogin() {
+  const username = document.getElementById('login-u').value.trim();
+  const password = document.getElementById('login-p').value;
+  try {
+    const data = await rrApi('/api/auth/login', { method: 'POST', body: JSON.stringify({ username, password }) });
+    rrSaveSession(data.user, data.token);
+    closeAuth();
+    updatePublicAuthUI();
+    if (data.user.role === 'admin') switchToAdmin();
+    toast(data.user.role === 'admin' ? 'Ласкаво просимо в адмін-панель!' : 'Ви успішно увійшли');
+  } catch (error) {
+    rrShowFormError('login-err', error.message || 'Невірний логін або пароль');
+  }
+}
+
+function doAdminLogin() {
+  doLogin();
+}
+
+async function doRegister() {
+  const email = document.getElementById('reg-email').value.trim();
+  const username = document.getElementById('reg-u').value.trim();
+  const password = document.getElementById('reg-p').value;
+  const confirmPassword = document.getElementById('reg-p2').value;
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i.test(email)) return rrShowFormError('reg-err', 'Введіть коректну електронну пошту');
+  if (password !== confirmPassword) return rrShowFormError('reg-err', 'Паролі не співпадають');
+  try {
+    const data = await rrApi('/api/auth/register', { method: 'POST', body: JSON.stringify({ email, username, password, confirmPassword }) });
+    rrSaveSession(data.user, data.token);
+    closeAuth();
+    updatePublicAuthUI();
+    toast('Акаунт створено, ви увійшли автоматично');
+  } catch (error) {
+    rrShowFormError('reg-err', error.message);
+  }
+}
+
+function openAuth() {
+  rrTransformAuthModal();
+  document.getElementById('auth-m').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  switchAuthTab('login');
+}
+
+function signOut() {
+  rrClearSession();
+  updatePublicAuthUI();
+  switchToPublic();
+  const dd = document.getElementById('nav-dd');
+  if (dd) dd.style.display = 'none';
+  toast('Ви вийшли');
+}
+
+function adminLogout() {
+  signOut();
+}
+
+function rrInstallGuestDropdown() {
+  const dd = document.getElementById('nav-dd');
+  if (!dd) return;
+  dd.innerHTML = `
+    <div style="padding:12px 16px 10px;border-bottom:1px solid rgba(212,175,55,.1)">
+      <p id="dd-nm" style="font-family:'Playfair Display',serif;color:var(--gold);font-size:.9rem"></p>
+      <p id="dd-ph" style="font-size:.75rem;color:#5a4030"></p>
+    </div>
+    <button class="gp-action" onclick="openGuestPanel('booking')">🍽 Бронювання столика</button>
+    <button class="gp-action" onclick="openGuestPanel('review')">✍️ Написати відгук</button>
+    <button class="gp-action" onclick="openGuestPanel('favorites')">⭐ Обране меню</button>
+    <button class="gp-action" onclick="openGuestPanel('profile')">✏️ Редагувати профіль</button>
+    <button class="gp-action" onclick="signOut()">🚪 Вийти</button>`;
+}
+
+function updatePublicAuthUI() {
+  const isAdmin = isAdminLoggedIn();
+  const lb = document.getElementById('nav-login-btn');
+  const uw = document.getElementById('nav-user');
+  const mab = document.getElementById('mob-auth-btn');
+  const mad = document.getElementById('mob-admin-btn');
+  const nab = document.getElementById('nav-admin-btn');
+  const wr = document.getElementById('wr-wrap');
+  const rp = document.getElementById('rl-prompt');
+  if (nab) nab.style.display = isAdmin ? 'block' : 'none';
+  if (mad) mad.style.display = isAdmin ? 'block' : 'none';
+  if (rrState.user) {
+    if (lb) lb.style.display = 'none';
+    if (uw) uw.style.display = 'block';
+    document.getElementById('nav-av').textContent = rrUserInitials();
+    document.getElementById('dd-nm').textContent = rrState.user.username || 'Гість';
+    document.getElementById('dd-ph').textContent = rrState.user.phone || rrState.user.email || '';
+    if (mab) { mab.textContent = '👤 Меню гостя'; mab.onclick = () => { toggleDD(); closeMob(); }; }
+    if (wr) wr.style.display = 'block';
+    if (rp) rp.style.display = 'none';
+    fillBookingForm();
+  } else {
+    if (lb) lb.style.display = 'flex';
+    if (uw) uw.style.display = 'none';
+    if (mab) { mab.textContent = '🔑 Увійти'; mab.onclick = () => { openAuth(); closeMob(); }; }
+    if (wr) wr.style.display = 'none';
+    if (rp) rp.style.display = 'block';
+    const banner = document.getElementById('bk-banner');
+    const guest = document.getElementById('bk-guest');
+    if (banner) banner.style.display = 'none';
+    if (guest) guest.style.display = 'flex';
+  }
+}
+
+function renderPublicMenu(cat) {
+  rrState.currentMenuCat = cat || rrState.currentMenuCat;
+  const items = rrState.menuByCategory[rrState.currentMenuCat] || [];
+  const g = document.getElementById('mgrid');
+  if (!g) return;
+  if (!items.length) {
+    g.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#6a5040;font-style:italic">Меню поки порожнє або Supabase ще не налаштовано.</p>';
+    return;
+  }
+  const fav = rrFavorites();
+  g.innerHTML = items.map(it => `
+    <div class="mc">
+      ${it.badge ? `<div class="fbg">${esc(it.badge)}</div>` : ''}
+      <div class="mc-iw">
+        <button class="fav-star ${fav.includes(it.id) ? 'on' : ''}" onclick="event.stopPropagation();toggleFavorite('${it.id}')" title="Додати в обране">★</button>
+        <img class="mc-img" src="${it.image_url || ''}" alt="${esc(it.name)}" loading="lazy" onerror="this.parentElement.style.background='rgba(212,175,55,.04)'"/>
+      </div>
+      <div class="mc-bd">
+        <h3 class="mc-nm">${esc(it.name)}</h3>
+        <p class="mc-dc">${esc(it.description || '')}</p>
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <span class="mc-wt">${esc(it.weight || '')}</span>
+          <span class="mc-pr">${Number(it.price || 0).toLocaleString()} грн</span>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+async function toggleFavorite(id) {
+  if (!rrState.user) { openAuth(); toast('Увійдіть, щоб додавати обране'); return; }
+  if (String(id).startsWith('local-')) { toast('Підключіть Supabase, щоб зберігати обране'); return; }
+  const fav = rrFavorites();
+  const next = fav.includes(id) ? fav.filter(x => x !== id) : fav.concat(id);
+  try {
+    const data = await rrApi('/api/users/favorites', { method: 'PUT', body: JSON.stringify({ favorites: next }) });
+    rrState.user = data.user;
+    rrSaveSession(data.user, rrState.token);
+    renderPublicMenu(rrState.currentMenuCat);
+    toast(next.includes(id) ? 'Додано в обране' : 'Видалено з обраного');
+  } catch (error) {
+    toast(error.message);
+  }
+}
+
+function rrEnsureGuestModal() {
+  if (document.getElementById('guest-modal')) return;
+  document.body.insertAdjacentHTML('beforeend', `
+    <div id="guest-modal" class="mb">
+      <div class="mk" style="max-width:620px">
+        <div style="padding:28px 26px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+            <h3 id="guest-modal-title" style="font-family:'Playfair Display',serif;color:var(--gold);font-size:1.25rem;margin:0"></h3>
+            <button onclick="closeGuestPanel()" style="background:none;border:none;color:#6a5040;font-size:1.3rem;cursor:pointer;line-height:1">×</button>
+          </div>
+          <div id="guest-modal-body"></div>
+        </div>
+      </div>
+    </div>`);
+  document.getElementById('guest-modal').addEventListener('click', e => { if (e.target.id === 'guest-modal') closeGuestPanel(); });
+}
+
+function openGuestPanel(kind) {
+  if (!rrState.user) { openAuth(); return; }
+  const dd = document.getElementById('nav-dd');
+  if (dd) dd.style.display = 'none';
+  if (kind === 'booking') { closeGuestPanel(); document.getElementById('contact').scrollIntoView({ behavior: 'smooth' }); fillBookingForm(); return; }
+  if (kind === 'review') { closeGuestPanel(); document.getElementById('reviews').scrollIntoView({ behavior: 'smooth' }); return; }
+  rrEnsureGuestModal();
+  const title = document.getElementById('guest-modal-title');
+  const body = document.getElementById('guest-modal-body');
+  if (kind === 'favorites') {
+    title.textContent = 'Обране меню';
+    const ids = rrFavorites();
+    const items = rrState.menuItems.filter(item => ids.includes(item.id));
+    body.innerHTML = items.length ? items.map(item => `
+      <div style="display:flex;gap:12px;align-items:center;border-bottom:1px solid rgba(212,175,55,.08);padding:10px 0">
+        <img src="${item.image_url || ''}" alt="" style="width:64px;height:52px;object-fit:cover"/>
+        <div style="flex:1"><p style="font-family:'Playfair Display',serif;color:var(--cream)">${esc(item.name)}</p><p style="color:#6a5040;font-size:.82rem">${Number(item.price).toLocaleString()} грн</p></div>
+        <button class="bdanger" onclick="toggleFavorite('${item.id}');setTimeout(()=>openGuestPanel('favorites'),250)">Видалити</button>
+      </div>`).join('') : '<p style="color:#6a5040;font-style:italic">У вас ще немає обраних страв.</p>';
+  }
+  if (kind === 'profile') {
+    title.textContent = 'Редагувати профіль';
+    body.innerHTML = `
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div><label class="fl">Логін</label><input id="profile-u" class="fi" value="${esc(rrState.user.username || '')}"/></div>
+        <div><label class="fl">Телефон</label><input id="profile-p" class="fi" value="${esc(rrState.user.phone || '')}" placeholder="+380 XX XXX XXXX"/></div>
+        <button class="bg" onclick="saveProfile()" style="justify-content:center"><span>Зберегти профіль</span></button>
+        <p id="profile-msg" style="display:none;text-align:center;font-size:.85rem"></p>
+      </div>`;
+  }
+  document.getElementById('guest-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeGuestPanel() {
+  const modal = document.getElementById('guest-modal');
+  if (modal) modal.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+async function saveProfile() {
+  try {
+    const data = await rrApi('/api/users/profile', {
+      method: 'PUT',
+      body: JSON.stringify({
+        username: document.getElementById('profile-u').value.trim(),
+        phone: document.getElementById('profile-p').value.trim()
+      })
+    });
+    rrSaveSession(data.user, rrState.token);
+    updatePublicAuthUI();
+    document.getElementById('profile-msg').style.display = 'block';
+    document.getElementById('profile-msg').style.color = '#50c080';
+    document.getElementById('profile-msg').textContent = 'Профіль оновлено';
+  } catch (error) {
+    document.getElementById('profile-msg').style.display = 'block';
+    document.getElementById('profile-msg').style.color = '#e07040';
+    document.getElementById('profile-msg').textContent = error.message;
+  }
+}
+
+function renderPublicReviews() {
+  const saved = rrState.reviews.map(r => ({
+    s: r.rating,
+    t: r.text,
+    a: r.author_name,
+    c: '',
+    ag: new Date(r.created_at).toLocaleDateString('uk-UA'),
+    i: (r.author_name || '?').charAt(0).toUpperCase()
+  }));
+  const all = [...STATIC_REVIEWS, ...saved];
+  document.getElementById('rev-grid').innerHTML = all.map(r => `
+    <div class="rc rv">
+      <div style="color:var(--gold);letter-spacing:.1em;font-size:1rem">${'★'.repeat(r.s || 5)}${'☆'.repeat(5 - (r.s || 5))}</div>
+      <p style="font-size:.97rem;line-height:1.75;color:var(--creamy);font-style:italic;margin:12px 0">"${esc(r.t)}"</p>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:34px;height:34px;border-radius:50%;background:var(--burg);border:1.5px solid rgba(212,175,55,.3);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:.8rem;color:var(--gold);flex-shrink:0">${r.i || '?'}</div>
+        <div><p style="font-family:'Playfair Display',serif;font-size:.86rem;color:var(--cream)">${esc(r.a || 'Гість')}</p><p style="font-size:.74rem;color:#5a4030">${esc(r.c || '')} ${r.ag || ''}</p></div>
+      </div>
+    </div>`).join('');
+  initReveal();
+}
+
+async function subRev() {
+  if (!rrState.user) { toast('Увійдіть, щоб залишити відгук'); openAuth(); return; }
+  const txt = document.getElementById('rv-txt').value.trim();
+  if (!txt) { toast('Напишіть текст відгуку'); return; }
+  try {
+    await rrApi('/api/reviews', { method: 'POST', body: JSON.stringify({ rating: selectedStars, text: txt }) });
+    document.getElementById('rv-txt').value = '';
+    await rrLoadReviews();
+    toast('Дякуємо за відгук!');
+  } catch (error) {
+    toast(error.message);
+  }
+}
+
+function fillBookingForm() {
+  if (!rrState.user) return;
+  const p = document.getElementById('b-p');
+  const n = document.getElementById('b-n');
+  if (p && rrState.user.phone) p.value = rrState.user.phone;
+  if (n) n.value = rrState.user.username || '';
+  document.getElementById('bk-banner').style.display = 'flex';
+  document.getElementById('bk-guest').style.display = 'none';
+  document.getElementById('bk-nm').textContent = '👋 ' + (rrState.user.username || rrState.user.email);
+}
+
+function rrGuestsCount(value) {
+  const n = String(value || '').match(/\d+/);
+  return n ? Number(n[0]) : 1;
+}
+
+async function subBook(e) {
+  e.preventDefault();
+  try {
+    await rrApi('/api/bookings', {
+      method: 'POST',
+      body: JSON.stringify({
+        guest_name: document.getElementById('b-n').value.trim(),
+        guest_phone: document.getElementById('b-p').value.trim(),
+        date: document.getElementById('b-d').value,
+        time: document.getElementById('b-t').value,
+        guests_count: rrGuestsCount(document.getElementById('b-g').value),
+        comment: document.getElementById('b-c').value.trim()
+      })
+    });
+    document.getElementById('bk-ok').style.display = 'block';
+    e.target.reset();
+    if (rrState.user) fillBookingForm();
+    toast('Бронювання прийнято!');
+    setTimeout(() => document.getElementById('bk-ok').style.display = 'none', 6000);
+  } catch (error) {
+    toast(error.message);
+  }
+}
+
+function switchToAdmin() {
+  if (!isAdminLoggedIn()) { openAuth(); return; }
+  document.getElementById('public-view').style.display = 'none';
+  document.getElementById('admin-view').style.display = 'block';
+  document.body.style.overflow = 'auto';
+  history.pushState({ view: 'admin' }, '', '#admin');
+  initAdminPanel();
+}
+
+function switchToPublic() {
+  document.getElementById('admin-view').style.display = 'none';
+  document.getElementById('public-view').style.display = 'block';
+  if (location.hash === '#admin') history.pushState({ view: 'public' }, '', '#');
+}
+
+async function initAdminPanel() {
+  document.getElementById('sb-user').textContent = '👤 ' + (rrState.user ? rrState.user.username : 'admin');
+  document.getElementById('today-lbl').textContent = new Date().toLocaleDateString('uk-UA', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+  await Promise.all([rrLoadAdminBookings(), rrLoadReviews(), rrLoadMenu()]);
+  renderDashboard();
+  updateNewBadge();
+}
+
+async function rrLoadAdminBookings() {
+  const data = await rrApi('/api/bookings');
+  rrState.bookings = data.bookings || [];
+}
+
+function rrBookingName(b) { return b.guest_name || b.name || '—'; }
+function rrBookingPhone(b) { return b.guest_phone || b.phone || '—'; }
+function rrBookingGuests(b) { return b.guests_count || b.guests || '—'; }
+
+function updateNewBadge() {
+  const n = rrState.bookings.filter(b => (b.status || 'pending') === 'pending').length;
+  const nb = document.getElementById('nb-bk');
+  if (nb) {
+    if (n > 0) { nb.textContent = n; nb.style.display = 'inline'; } else nb.style.display = 'none';
+  }
+}
+
+function renderDashboard() {
+  const bk = rrState.bookings || [];
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('ds-tot').textContent = bk.length;
+  document.getElementById('ds-new').textContent = bk.filter(b => (b.status || 'pending') === 'pending').length;
+  document.getElementById('ds-tod').textContent = bk.filter(b => b.date === today).length;
+  document.getElementById('ds-con').textContent = bk.filter(b => b.status === 'confirmed').length;
+  const recent = bk.slice(0, 8);
+  const tb = document.getElementById('ds-body'), em = document.getElementById('ds-empty');
+  if (!recent.length) { tb.innerHTML = ''; em.style.display = 'block'; return; }
+  em.style.display = 'none';
+  tb.innerHTML = recent.map(b => `
+    <tr onclick="openBkDetail('${b.id}')">
+      <td>${esc(rrBookingName(b))}</td>
+      <td style="font-size:.82rem">${esc(rrBookingPhone(b))}</td>
+      <td>${fmtD(b.date)}</td><td>${b.time || '—'}</td>
+      <td style="text-align:center">${esc(rrBookingGuests(b))}</td>
+      <td><span class="sn sn-${b.status || 'pending'}">${stLbl(b.status)}</span></td>
+      <td>
+        ${(b.status || 'pending') === 'pending' ? `<button onclick="event.stopPropagation();setStatus('${b.id}','confirmed')" class="bo" style="font-size:.55rem;padding:3px 9px;margin-right:3px">✓</button>` : ''}
+        ${b.status !== 'cancelled' && b.status !== 'done' ? `<button onclick="event.stopPropagation();setStatus('${b.id}','cancelled')" style="background:rgba(80,40,40,.15);border:1px solid rgba(80,40,40,.25);color:#9a5050;padding:3px 9px;cursor:pointer;font-family:'Cinzel',serif;font-size:.55rem">✗</button>` : ''}
+      </td>
+    </tr>`).join('');
+  updateNewBadge();
+}
+
+function renderAdmBookings() {
+  const filter = document.getElementById('bk-filter').value;
+  let bk = rrState.bookings || [];
+  if (filter) bk = bk.filter(b => b.status === filter);
+  const tb = document.getElementById('bk-body'), em = document.getElementById('bk-empty');
+  if (!bk.length) { tb.innerHTML = ''; em.style.display = 'block'; return; }
+  em.style.display = 'none';
+  tb.innerHTML = bk.map((b, i) => `
+    <tr onclick="openBkDetail('${b.id}')">
+      <td style="font-size:.72rem;color:#5a4030">#${String(i + 1).padStart(3, '0')}</td>
+      <td>${esc(rrBookingName(b))}</td>
+      <td style="font-size:.82rem">${esc(rrBookingPhone(b))}</td>
+      <td>${fmtD(b.date)} ${b.time || ''}</td>
+      <td>${esc(rrBookingGuests(b))}</td>
+      <td style="font-size:.82rem">—</td>
+      <td style="font-size:.82rem;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(b.comment || '')}">${esc(b.comment || '—')}</td>
+      <td><span class="sn sn-${b.status || 'pending'}">${stLbl(b.status)}</span></td>
+      <td style="white-space:nowrap">
+        ${(b.status || 'pending') === 'pending' ? `<button onclick="event.stopPropagation();setStatus('${b.id}','confirmed')" class="bo" style="font-size:.54rem;padding:3px 8px;margin-right:3px">✓</button>` : ''}
+        ${b.status !== 'cancelled' && b.status !== 'done' ? `<button onclick="event.stopPropagation();setStatus('${b.id}','cancelled')" style="background:rgba(80,40,40,.15);border:1px solid rgba(80,40,40,.25);color:#9a5050;padding:3px 8px;cursor:pointer;font-family:'Cinzel',serif;font-size:.54rem">✗</button>` : ''}
+      </td>
+    </tr>`).join('');
+  updateNewBadge();
+}
+
+async function setStatus(id, st) {
+  try {
+    await rrApi('/api/bookings', { method: 'PATCH', body: JSON.stringify({ id, status: st }) });
+    await rrLoadAdminBookings();
+    renderDashboard();
+    renderAdmBookings();
+    updateNewBadge();
+    toast(st === 'confirmed' ? 'Підтверджено' : st === 'done' ? 'Виконано' : 'Скасовано');
+  } catch (error) {
+    toast(error.message);
+  }
+}
+
+async function markAllConfirmed() {
+  const pending = rrState.bookings.filter(b => (b.status || 'pending') === 'pending');
+  await Promise.all(pending.map(b => rrApi('/api/bookings', { method: 'PATCH', body: JSON.stringify({ id: b.id, status: 'confirmed' }) })));
+  await rrLoadAdminBookings();
+  renderAdmBookings();
+  renderDashboard();
+  updateNewBadge();
+  toast('Всі нові підтверджені');
+}
+
+function openBkDetail(id) {
+  const b = rrState.bookings.find(x => x.id === id);
+  if (!b) return;
+  document.getElementById('bk-detail').innerHTML = `
+    <div style="display:flex;flex-direction:column;gap:0">
+      ${dr('👤 Гість', esc(rrBookingName(b)))}
+      ${dr('📞 Телефон', `<a href="tel:${rrBookingPhone(b)}" style="color:var(--gold)">${esc(rrBookingPhone(b))}</a>`)}
+      ${dr('📅 Дата', fmtD(b.date))}
+      ${dr('🕐 Час', b.time || '—')}
+      ${dr('👥 Людей', esc(rrBookingGuests(b)))}
+      ${b.comment ? dr('💬 Коментар', `<em style="color:#9a8060">${esc(b.comment)}</em>`) : ''}
+      ${dr('📊 Статус', `<span class="sn sn-${b.status || 'pending'}">${stLbl(b.status)}</span>`)}
+      ${dr('🕒 Заявка', new Date(b.created_at || Date.now()).toLocaleString('uk-UA'))}
+    </div>`;
+  document.getElementById('bk-actions').innerHTML = `
+    ${b.status !== 'confirmed' && b.status !== 'done' ? `<button onclick="setStatus('${b.id}','confirmed');closeBkModal()" class="bg" style="flex:1;justify-content:center;padding:10px">✓ Підтвердити</button>` : ''}
+    ${b.status !== 'done' ? `<button onclick="setStatus('${b.id}','done');closeBkModal()" style="background:rgba(30,100,60,.15);border:1px solid rgba(30,100,60,.3);color:#50c080;padding:10px 16px;cursor:pointer;font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.1em;flex:1;text-align:center">✓ Виконано</button>` : ''}
+    <button onclick="setStatus('${b.id}','cancelled');closeBkModal()" style="background:rgba(80,40,40,.12);border:1px solid rgba(80,40,40,.25);color:#9a5050;padding:10px 16px;cursor:pointer;font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.1em;flex:1;text-align:center">✗ Скасувати</button>`;
+  document.getElementById('bk-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+async function addDemoBooking() {
+  const dt = new Date(); dt.setDate(dt.getDate() + Math.floor(Math.random() * 7));
+  await rrApi('/api/bookings', {
+    method: 'POST',
+    body: JSON.stringify({
+      guest_name: DEMO_NAMES[Math.floor(Math.random() * DEMO_NAMES.length)],
+      guest_phone: '+380' + Math.floor(Math.random() * 9e8 + 1e8),
+      date: dt.toISOString().split('T')[0],
+      time: `${12 + Math.floor(Math.random() * 9)}:${Math.random() > .5 ? '00' : '30'}`,
+      guests_count: 4,
+      comment: 'Тестове бронювання'
+    })
+  });
+  await rrLoadAdminBookings();
+  renderDashboard();
+  updateNewBadge();
+  toast('Тестове бронювання додано');
+}
+
+function exportCSV() {
+  const bk = rrState.bookings || [];
+  if (!bk.length) { toast('Немає бронювань'); return; }
+  const h = ['ID', 'Імʼя', 'Телефон', 'Дата', 'Час', 'Людей', 'Коментар', 'Статус', 'Дата заявки'];
+  const rows = bk.map(b => [b.id, rrBookingName(b), rrBookingPhone(b), b.date || '', b.time || '', rrBookingGuests(b), b.comment || '', stLbl(b.status), b.created_at || '']);
+  const csv = [h, ...rows].map(r => r.map(c => '"' + String(c).replace(/"/g, '""') + '"').join(',')).join('\n');
+  const a = document.createElement('a'); a.href = 'data:text/csv;charset=utf-8,\uFEFF' + encodeURIComponent(csv); a.download = 'bookings.csv'; a.click();
+}
+
+function renderAdmMenuTabs() {
+  document.getElementById('adm-menu-tabs').innerHTML = Object.entries(CAT_LABELS).map(([k, v]) =>
+    `<button onclick="swAdmMenuCat('${k}')" style="padding:6px 14px;border:1px solid ${k === admMenuCat ? 'var(--gold)' : 'rgba(212,175,55,.2)'};background:${k === admMenuCat ? 'rgba(212,175,55,.1)' : 'transparent'};color:${k === admMenuCat ? 'var(--gold)' : '#7a5a40'};cursor:pointer;font-family:'Cinzel',serif;font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;transition:all .2s">${v}</button>`
+  ).join('');
+}
+
+function renderAdmMenuItems() {
+  const items = rrState.menuByCategory[admMenuCat] || [];
+  const list = document.getElementById('adm-menu-list');
+  if (!items.length) { list.innerHTML = '<p style="color:#4a3520;font-style:italic;text-align:center;padding:16px">Немає страв</p>'; return; }
+  list.innerHTML = items.map(it => `
+    <div class="me-row">
+      <input class="me-inp" type="text" value="${esc(it.name)}" onchange="updMenuItem('${it.id}','name',this.value)" style="flex:1.3;min-width:80px" placeholder="Назва"/>
+      <input class="me-inp" type="text" value="${esc(it.description || '')}" onchange="updMenuItem('${it.id}','description',this.value)" style="flex:2;min-width:100px" placeholder="Опис"/>
+      <input class="me-inp" type="text" value="${esc(it.weight || '')}" onchange="updMenuItem('${it.id}','weight',this.value)" style="width:70px" placeholder="Вага"/>
+      <input class="me-inp" type="number" value="${Number(it.price || 0)}" onchange="updMenuItem('${it.id}','price',+this.value)" style="width:76px;text-align:right" placeholder="Ціна"/>
+      <input class="me-inp" type="text" value="${esc(it.badge || '')}" onchange="updMenuItem('${it.id}','badge',this.value)" style="width:90px" placeholder="Бейдж"/>
+      <button onclick="delMenuItem('${it.id}')" style="background:rgba(196,74,31,.1);border:1px solid rgba(196,74,31,.2);color:var(--fire);padding:4px 8px;cursor:pointer;font-size:.85rem;flex-shrink:0">×</button>
+    </div>`).join('');
+}
+
+async function updMenuItem(id, field, value) {
+  const item = rrState.menuItems.find(x => x.id === id);
+  if (!item) return;
+  const payload = Object.assign({}, item, { [field]: value });
+  try {
+    await rrApi('/api/menu/' + encodeURIComponent(id), { method: 'PUT', body: JSON.stringify(payload) });
+    await rrLoadMenu();
+    renderAdmMenuItems();
+  } catch (error) {
+    toast(error.message);
+  }
+}
+
+async function delMenuItem(id) {
+  if (!confirm('Видалити страву?')) return;
+  await rrApi('/api/menu/' + encodeURIComponent(id), { method: 'DELETE', body: JSON.stringify({}) });
+  await rrLoadMenu();
+  renderAdmMenuItems();
+  toast('Страву видалено');
+}
+
+async function addMenuItem() {
+  await rrApi('/api/menu', {
+    method: 'POST',
+    body: JSON.stringify({ name: 'Нова страва', description: 'Опис страви', weight: '—', price: 200, image_url: '', category: admMenuCat, badge: '' })
+  });
+  await rrLoadMenu();
+  renderAdmMenuItems();
+}
+
+async function resetMenuToDefault() {
+  if (!confirm('Скинути меню до початкового? Всі зміни будуть втрачені.')) return;
+  await rrApi('/api/menu-reset', { method: 'POST', body: JSON.stringify({ items: rrDefaultMenuItems() }) });
+  await rrLoadMenu();
+  renderAdmMenuItems();
+  toast('Меню скинуто до початкового');
+}
+
+function renderAdmReviews() {
+  const rv = rrState.reviews || [];
+  const rl = document.getElementById('adm-rv-list'), em = document.getElementById('adm-rv-empty'), rc = document.getElementById('rv-cnt');
+  rc.textContent = rv.length + ' відгуків';
+  if (!rv.length) { rl.innerHTML = ''; em.style.display = 'block'; return; }
+  em.style.display = 'none';
+  rl.innerHTML = rv.map(r => `
+    <div style="background:rgba(255,255,255,.02);border:1px solid rgba(212,175,55,.08);padding:14px 16px;margin-bottom:9px;display:flex;gap:14px;align-items:flex-start">
+      <div style="flex:1">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+          <span style="color:var(--gold);font-size:.88rem">${'★'.repeat(r.rating || 5)}${'☆'.repeat(5 - (r.rating || 5))}</span>
+          <span style="font-family:'Playfair Display',serif;font-size:.88rem;color:var(--cream)">${esc(r.author_name || 'Гість')}</span>
+          <span style="font-size:.72rem;color:#4a3020">${new Date(r.created_at).toLocaleDateString('uk-UA')}</span>
+        </div>
+        <p style="font-size:.88rem;color:#9a8060;font-style:italic">"${esc(r.text)}"</p>
+      </div>
+      <button onclick="delReview('${r.id}')" style="background:none;border:none;color:#4a3020;cursor:pointer;font-size:1rem;flex-shrink:0" title="Видалити">🗑️</button>
+    </div>`).join('');
+}
+
+async function delReview(id) {
+  if (!confirm('Видалити відгук?')) return;
+  await rrApi('/api/reviews', { method: 'DELETE', body: JSON.stringify({ id }) });
+  await rrLoadReviews();
+  renderAdmReviews();
+  toast('Відгук видалено');
+}
+
+async function clearAllReviews() {
+  if (!confirm('Видалити ВСІ відгуки?')) return;
+  await rrApi('/api/reviews', { method: 'DELETE', body: JSON.stringify({}) });
+  await rrLoadReviews();
+  renderAdmReviews();
+}
+
+async function clearAllBookings() {
+  if (!confirm('Видалити ВСІ бронювання?')) return;
+  await rrApi('/api/bookings', { method: 'DELETE', body: JSON.stringify({}) });
+  await rrLoadAdminBookings();
+  renderDashboard();
+  renderAdmBookings();
+  updateNewBadge();
+}
+
+function stLbl(s) {
+  return { pending: 'Нова', new: 'Нова', confirmed: 'Підтверджено', done: 'Виконано', cancelled: 'Скасовано' }[s || 'pending'] || 'Нова';
+}
+
+async function rrInitRealtime() {
+  try {
+    const cfg = await rrApi('/api/config');
+    if (!cfg.url || !cfg.anonKey) return;
+    const mod = await import('https://esm.sh/@supabase/supabase-js@2');
+    rrState.supabaseClient = mod.createClient(cfg.url, cfg.anonKey);
+    rrState.supabaseClient
+      .channel('public-menu-items')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'menu_items' }, () => rrLoadMenu())
+      .subscribe();
+  } catch {
+    /* Realtime is optional; polling still keeps the menu reasonably fresh. */
+  }
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+  rrTransformAuthModal();
+  rrInstallGuestDropdown();
+  await rrLoadSession();
+  updatePublicAuthUI();
+  await Promise.all([rrLoadMenu(), rrLoadReviews()]);
+  rrInitRealtime();
+  setInterval(rrLoadMenu, 10000);
+});
+</script>
+</body>
+</html>
